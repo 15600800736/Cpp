@@ -1,129 +1,130 @@
 
-//the Type passed must typedef two type:position for starter and ender
-//CurrentBlock should be a iterator instead of a block which can reduce the use of find-function
+
+#ifndef ASTAR_H
+#define ASTAR_H
 #include <Windows.h>
 #include <vector>
 #include <math.h>
 #include <algorithm>
 #include <iostream>
 
-
-template<class Node>
+namespace huger
+{
+template<class LocalIter>
 struct nodeTraits
 {
-	typedef typename Node::order order;
-	typedef typename Node::distance distance;
+	typedef typename LocalIter::order order;
+	typedef typename LocalIter::distance distance;
 };
 
 
 
-template<class Node>
+template<class LocalIter>
 class AStar
 {
-	typedef typename nodeTraits<Node>::order order;
-	typedef typename nodeTraits<Node>::distance distance;
-	typedef std::vector<Node> vecNode;
-	typedef std::vector<order> vecCoord;
+	typedef typename nodeTraits<LocalIter>::order order;
+	typedef typename nodeTraits<LocalIter>::distance distance;
+
 public:
-	AStar(Node& starter, Node& ender);
+	AStar(LocalIter& starter, LocalIter& ender);
 	void outPutWay();
 	~AStar();
 private:
-	vecNode getAroundFGH(Node& node);
-	Node getFGH(Node& parent);
-	vecNode findPath();
+	std::vector<LocalIter>::iterator getAroundFGH(LocalIter iter);
+	LocalIter getFGH(LocalIter& parent);
+	std::vector<LocalIter> findPath();
 private:
-	Node* _starter;
-	Node* _ender;
+	LocalIter _starter;
+	LocalIter _ender;
 };
 
 
 //------------------implements------------------
-template<typename Node>
-AStar<Node>::AStar(Node& starter, Node& ender) :_starter(new Node(starter)), _ender(new Node(ender))
+template<typename LocalIter>
+AStar<LocalIter>::AStar(LocalIter& starter, LocalIter& ender) :_starter(starter), _ender(ender)
 {
 	//do something
 }
-template<typename Node>
-AStar<Node>::~AStar()
+template<typename LocalIter>
+AStar<LocalIter>::~AStar()
 {
-	delete _starter;
-	delete _ender;
+
 }
-template<typename Node>
-std::vector<Node> AStar<Node>::getAroundFGH(Node& node)
+template<typename LocalIter>
+std::vector<LocalIter> AStar<LocalIter>::getAroundFGH(LocalIter iter)
 {
-	
+	std::vector<LocalIter> around;
+	while (around.front() != ++iter)
+	{
+		around.push_back(iter);
+	}
+	return around;
 }
-template<typename Node>
-Node AStar<Node>::getFGH(Node& parent)
+template<typename LocalIter>
+LocalIter AStar<LocalIter>::getFGH(LocalIter& parent)
 {
-	
+
 }
-template<typename Node>
-std::vector<Node> AStar<Node>::findPath()
+template<typename LocalIter>
+std::vector<LocalIter> AStar<LocalIter>::findPath()
 {
 	if (_starter == NULL || _ender == NULL)
 	{
 		std::cout << "Please select a visible beginning and destination." << std::endl;
-		return vecNode();
+		return std::vector<LocalIter>();
 	}
-	vecNode openList;
-	vecNode closeList;
-	Node selectBlock = *_starter;
-	Node currentBlock;
-	Node destination = *_ender;
+	std::vector<LocalIter> openList;
+	std::vector<LocalIter> closeList;
+	LocalIter selectBlock = _starter;
+	LocalIter currentBlock;
+	LocalIter destination = _ender;
 	openList.push_back(selectBlock);
 	do
 	{
 		currentBlock = selectBlock;
-		openList.erase(std::find<vecNode::iterator>(openList.begin(), openList.end(), currentBlock));
+		openList.erase(std::find<typename std::vector<LocalIter>::iterator>(openList.begin(), openList.end(), currentBlock));
 		closeList.push_back(currentBlock);
-		vecNode around = getAroundFGH(currentBlock);
-		vecNode::iterator iter = around.begin();
-		while (iter != around.end())
+		std::vector<LocalIter> around = getAroundFGH(currentBlock);
+		for (typename std::vector<LocalIter>::iterator iter = around.begin();
+			iter != around.end();
+			iter++)
 		{
-			vecNode::iterator iterBlock = std::find<vecNode::iterator>(openList.begin(), openList.end(), *iter);
-
-			if (std::find<vecNode::iterator>(closeList.begin(), closeList.end(), *iter) != closeList.end() || ((*_map)[iter->_coord]) == 1)
+			typename std::vector<LocalIter>::iterator iterBlock = std::find<typename std::vector<LocalIter>::iterator>(openList.begin(), openList.end(), *iter);
+			if (std::find<typename std::vector<LocalIter>::iterator>(closeList.begin(), closeList.end(), *iter) != closeList.end())
 			{
 
 			}
 			else if (iterBlock != openList.end())
 			{
-				Node newBlock = getFGH(iter->_coord, currentBlock);
-				double tempF = iter->_f;
-				if (getFGH(iter->_coord, currentBlock)._f < tempF)
-				{
-					*iterBlock = newBlock;
-				}
+				//rewrite
+				*iterBlock = newBlock;
+
 			}
 			else if (iterBlock == openList.end())
 			{
 				openList.push_back(*iter);
 			}
-			iter++;
 		}
-		vecNode::iterator tmpIter = std::min_element<vecNode::iterator>(openList.begin(), openList.end());
+		typename std::vector<LocalIter>::iterator tmpIter = std::min_element<std::vector<LocalIter>::iterator>(openList.begin(), openList.end());
 		selectBlock = *tmpIter;
-	} while (std::find<vecNode::iterator>(openList.begin(), openList.end(), destination) == openList.end()
+	} while (std::find<typename  std::vector<LocalIter>::iterator>(openList.begin(), openList.end(), destination) == openList.end()
 		&& !openList.empty());
-	vecNode result;
-	result.push_back(_ender->_coord);
-	for (Node* block = &closeList.back(); block != NULL; block = block->_parent)
+	std::vector<LocalIter> result;
+	result.push_back(_ender);
+	for (LocalIter block = closeList.back(); block != NULL; block = block--)
 	{
-		result.push_back(block->_coord);
+		result.push_back(block);
 	}
 
 	return result;
 }
-template<typename Node>
-void AStar<Node>::outPutWay()
+template<typename LocalIter>
+void AStar<LocalIter>::outPutWay()
 {
-	vecNode way = findPath();
+	std::vector<LocalIter> way = findPath();
 	if (!way.empty())
 	{
-		for (vecCoord::reverse_iterator iterWay = way.rbegin();
+		for (std::vector<order>::reverse_iterator iterWay = way.rbegin();
 			iterWay != way.rend();
 			iterWay++)
 		{
@@ -134,4 +135,6 @@ void AStar<Node>::outPutWay()
 	{
 		std::cout << "Can not find the way from beginning to destination." << std::endl;
 	}
+}
+#endif
 }
