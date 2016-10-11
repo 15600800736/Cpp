@@ -8,11 +8,14 @@
 
 #include <list>
 #include <algorithm>
+#include <stddef.h>
 namespace huger
 {
 template<typename dataType>
 struct Node
 {
+	typedef int orderType;
+	typedef int distanceType;
 	Node(int order,
 		std::list<Node> around,
 		dataType data = NULL,

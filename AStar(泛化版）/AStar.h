@@ -10,87 +10,84 @@
 
 namespace huger
 {
-template<class LocalIter>
-struct nodeTraits
-{
-	typedef typename LocalIter::order order;
-	typedef typename LocalIter::distance distance;
-};
-
-
-
-template<class LocalIter>
+template<class LocalIterator>
 class AStar
 {
-	typedef typename nodeTraits<LocalIter>::order order;
-	typedef typename nodeTraits<LocalIter>::distance distance;
+	typedef typename LocalIterator::orderType orderType;
+	typedef typename LocalIterator::distanceType distanceType;
+	typedef typename LocalIterator::valueType valueType;
+	typedef typename LocalIterator::pointerType pointerType;
+	typedef typename LocalIterator::referenceType referenceType;
+	typedef typename LocalIterator::category category;
 
 public:
-	AStar(LocalIter& starter, LocalIter& ender);
+	AStar(LocalIterator& starter, LocalIterator& ender);
 	void outPutWay();
 	~AStar();
 private:
-	std::vector<LocalIter>::iterator getAroundFGH(LocalIter iter);
-	LocalIter getFGH(LocalIter& parent);
-	std::vector<LocalIter> findPath();
+	std::vector<LocalIterator> getAroundFGH(LocalIterator iter);
+	LocalIterator getFGH(LocalIterator& current,LocalIterator& parent);
+	std::vector<LocalIterator> findPath();
 private:
-	LocalIter _starter;
-	LocalIter _ender;
+	LocalIterator _starter;
+	LocalIterator _ender;
 };
 
 
 //------------------implements------------------
-template<typename LocalIter>
-AStar<LocalIter>::AStar(LocalIter& starter, LocalIter& ender) :_starter(starter), _ender(ender)
+template<typename LocalIterator>
+AStar<LocalIterator>::AStar(LocalIterator& starter, LocalIterator& ender) :_starter(starter), _ender(ender)
 {
 	//do something
 }
-template<typename LocalIter>
-AStar<LocalIter>::~AStar()
+template<typename LocalIterator>
+AStar<LocalIterator>::~AStar()
 {
 
 }
-template<typename LocalIter>
-std::vector<LocalIter> AStar<LocalIter>::getAroundFGH(LocalIter iter)
+template<typename LocalIterator>
+std::vector<LocalIterator> AStar<LocalIterator>::getAroundFGH(LocalIterator iter)
 {
-	std::vector<LocalIter> around;
+	std::vector<LocalIterator> around;
 	while (around.front() != ++iter)
 	{
-		around.push_back(iter);
+		around.push_back(getFGH();
 	}
 	return around;
 }
-template<typename LocalIter>
-LocalIter AStar<LocalIter>::getFGH(LocalIter& parent)
+template<typename LocalIterator>
+LocalIterator AStar<LocalIterator>::getFGH(LocalIterator& current,LocalIterator& parent)
 {
-
+	int g = current - parent;
+	int h = _ender - current;
+	int f = g + h;
 }
-template<typename LocalIter>
-std::vector<LocalIter> AStar<LocalIter>::findPath()
+template<typename LocalIterator>
+std::vector<LocalIterator> AStar<LocalIterator>::findPath()
 {
 	if (_starter == NULL || _ender == NULL)
 	{
 		std::cout << "Please select a visible beginning and destination." << std::endl;
-		return std::vector<LocalIter>();
+		return std::vector<LocalIterator>();
 	}
-	std::vector<LocalIter> openList;
-	std::vector<LocalIter> closeList;
-	LocalIter selectBlock = _starter;
-	LocalIter currentBlock;
-	LocalIter destination = _ender;
+	std::vector<LocalIterator> openList;
+	std::vector<LocalIterator> closeList;
+	LocalIterator selectBlock = _starter;
+	LocalIterator currentBlock;
+	LocalIterator destination = _ender;
 	openList.push_back(selectBlock);
 	do
 	{
 		currentBlock = selectBlock;
-		openList.erase(std::find<typename std::vector<LocalIter>::iterator>(openList.begin(), openList.end(), currentBlock));
+		openList.erase(std::find<typename std::vector<LocalIterator>::iterator>(openList.begin(), openList.end(), currentBlock));
 		closeList.push_back(currentBlock);
-		std::vector<LocalIter> around = getAroundFGH(currentBlock);
-		for (typename std::vector<LocalIter>::iterator iter = around.begin();
+		std::vector<LocalIterator> around = getAroundFGH(currentBlock);
+		for (typename std::vector<LocalIterator>::iterator iter = around.begin();
 			iter != around.end();
 			iter++)
 		{
-			typename std::vector<LocalIter>::iterator iterBlock = std::find<typename std::vector<LocalIter>::iterator>(openList.begin(), openList.end(), *iter);
-			if (std::find<typename std::vector<LocalIter>::iterator>(closeList.begin(), closeList.end(), *iter) != closeList.end())
+			typename std::vector<LocalIterator>::iterator iterBlock = std::find<typename std::vector<LocalIterator>::iterator>(openList.begin(), openList.end(), *iter);
+			if (std::find<typename std::vector<LocalIterator>::iterator>(closeList.begin(), closeList.end(), *iter) != closeList.end())
 			{
 
 			}
@@ -105,23 +102,23 @@ std::vector<LocalIter> AStar<LocalIter>::findPath()
 				openList.push_back(*iter);
 			}
 		}
-		typename std::vector<LocalIter>::iterator tmpIter = std::min_element<std::vector<LocalIter>::iterator>(openList.begin(), openList.end());
+		typename std::vector<LocalIterator>::iterator tmpIter = std::min_element<std::vector<LocalIterator>::iterator>(openList.begin(), openList.end());
 		selectBlock = *tmpIter;
-	} while (std::find<typename  std::vector<LocalIter>::iterator>(openList.begin(), openList.end(), destination) == openList.end()
+	} while (std::find<typename  std::vector<LocalIterator>::iterator>(openList.begin(), openList.end(), destination) == openList.end()
 		&& !openList.empty());
-	std::vector<LocalIter> result;
+	std::vector<LocalIterator> result;
 	result.push_back(_ender);
-	for (LocalIter block = closeList.back(); block != NULL; block = block--)
+	for (LocalIterator block = closeList.back(); block != NULL; block = block--)
 	{
 		result.push_back(block);
 	}
 
 	return result;
 }
-template<typename LocalIter>
-void AStar<LocalIter>::outPutWay()
+template<typename LocalIterator>
+void AStar<LocalIterator>::outPutWay()
 {
-	std::vector<LocalIter> way = findPath();
+	std::vector<LocalIterator> way = findPath();
 	if (!way.empty())
 	{
 		for (std::vector<order>::reverse_iterator iterWay = way.rbegin();
