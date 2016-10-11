@@ -14,8 +14,8 @@ template<typename dataType>
 struct Node
 {
 	Node(int order,
+		std::list<Node> around,
 		dataType data = NULL,
-		std::list<Node> around = NULL,
 		int num = 0,
 		int f = 0,
 		int g = 0,
@@ -39,8 +39,8 @@ struct Node
 //-------------------implements----------------------
 template<typename dataType>
 Node<dataType>::Node(int order,
-	dataType data,
 	std::list<Node> around,
+	dataType data,
 	int num,
 	int f,
 	int g,
@@ -62,7 +62,7 @@ Node<dataType>::Node(const Node& otherNode)
 	_order = otherNode._order;
 	_data = otherNode._data;
 	_around.clear();
-	std::copy<typename std::list<Node>::iterator, typename std::list<Node>::iterator>
+	std::copy<typename std::list<Node>::const_iterator, typename std::list<Node>::iterator>
 		(otherNode._around.begin(), otherNode._around.end(),
 		_around.begin());
 	_f = otherNode._f;
