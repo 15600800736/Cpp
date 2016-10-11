@@ -25,8 +25,8 @@ public:
 	void outPutWay();
 	~AStar();
 private:
-	std::vector<LocalIterator> getAroundFGH(LocalIterator iter);
-	LocalIterator getFGH(LocalIterator& current,LocalIterator& parent);
+	std::vector<valueType> getAroundFGH(LocalIterator iter);
+	valueType getFGH(LocalIterator& current,LocalIterator& parent);
 	std::vector<LocalIterator> findPath();
 private:
 	LocalIterator _starter;
@@ -46,9 +46,9 @@ AStar<LocalIterator>::~AStar()
 
 }
 template<typename LocalIterator>
-std::vector<LocalIterator> AStar<LocalIterator>::getAroundFGH(LocalIterator iter)
+std::vector<typename LocalIterator::valueType> AStar<LocalIterator>::getAroundFGH(LocalIterator iter)
 {
-	std::vector<LocalIterator> around;
+	std::vector<valueType> around;
 	while (around.front() != ++iter)
 	{
 		around.push_back(getFGH();
@@ -56,7 +56,7 @@ std::vector<LocalIterator> AStar<LocalIterator>::getAroundFGH(LocalIterator iter
 	return around;
 }
 template<typename LocalIterator>
-LocalIterator AStar<LocalIterator>::getFGH(LocalIterator& current,LocalIterator& parent)
+typename LocalIterator::valueType AStar<LocalIterator>::getFGH(LocalIterator& current, LocalIterator& parent)
 {
 	int g = current - parent;
 	int h = _ender - current;
