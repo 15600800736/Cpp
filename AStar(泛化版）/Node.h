@@ -9,7 +9,7 @@
 #include <list>
 #include <algorithm>
 #include <stddef.h>
-#include "LocalIterator.h"
+#include "NodeIterator.h"
 namespace huger
 {
 template<typename T>
@@ -23,12 +23,11 @@ public:
 	typedef typename T& referenceType;
 
 	typedef typename std::list<Node*>::iterator localIterator;
-	typedef typename LocalIterator<Node> iterator;
+	typedef typename NodeIterator<Node> iterator;
 	//-----constructor
 	Node(int order,
 		std::list<Node*> around,
 		valueType data = NULL,
-		int num = 0,
 		int f = 0,
 		int g = 0,
 		int h = 0,
@@ -41,7 +40,7 @@ public:
 		_h(h),
 		_parent(parent)
 	{
-		//do something
+
 	}
 	Node(const Node& otherNode)
 	{
@@ -55,7 +54,11 @@ public:
 		_g = otherNode._g;
 		_h = otherNode._h;
 		delete _parent;
-		_parent = otherNode._parent;
+		_parent = otherNode._parent,
+	}
+	~Node()
+	{
+		delete
 	}
 	//-----operator overloading
 	inline bool operator==(const Node& otherNode)
@@ -75,13 +78,13 @@ public:
 		return !(*this < otherNode || *this == otherNode);
 	}
 	//I/O interface
-	inline iterator begin()
+	inline localIterator begin()
 	{
-		return _beginner;
+		return _around.begin();
 	}
-	inline iterator end()
+	inline localIterator end()
 	{
-		return _ender;
+		return _around.end();
 	}
 	inline Node* getParent()const
 	{
@@ -91,27 +94,47 @@ public:
 	{
 		_parent = parent;
 	}
-	//functional
-	inline void connectTo(Node& otherNode)
+	inline orderType& order()
 	{
-		_around.push_back(&otherNode);
+		return _order;
 	}
-	inline void connectWith(Node& otherNode)
+	inline valueType& data()
+	{
+		return _data;
+	}
+	inline int& F()
+	{
+		return _f;
+	}
+	inline int& G()
+	{
+		return _g;
+	}
+	inline int& H()
+	{
+		return _h;
+	}
+	//functional
+	inline void connectTo(Node* otherNode)
+	{
+		_around.push_back(otherNode);
+	}
+	inline void connectWith(Node* otherNode)
 	{
 		connectTo(otherNode);
-		otherNode.connectTo(*this);
+		otherNode->connectTo(this);
 	}
 	//fields
+
+
+protected:
 	orderType _order;
+	std::list<Node*> _around;
 	valueType _data;
 	int _f;
 	int _g;
 	int _h;
-	std::list<Node*> _around;
-protected:
 	Node* _parent;
-	iterator _beginner;
-	iterator _ender;
 };
 }
 #endif

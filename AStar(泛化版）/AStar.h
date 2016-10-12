@@ -10,23 +10,26 @@
 
 namespace huger
 {
-template<class GlobalIterator>
+template<class Node>
 class AStar
 {
-	typedef typename GlobalIterator::orderType orderType;
-	typedef typename GlobalIterator::distanceType distanceType;
-	typedef typename GlobalIterator::valueType valueType;
-	typedef typename GlobalIterator::pointerType pointerType;
-	typedef typename GlobalIterator::referenceType referenceType;
-	typedef typename GlobalIterator::category category;
+	typedef typename Node::orderType orderType;
+	typedef typename Node::distanceType distanceType;
+	typedef typename Node::valueType valueType;
+	typedef typename Node::pointerType pointerType;
+	typedef typename Node::referenceType referenceType;
+	typedef typename Node::category category;
+
+	typedef typename ptrNode ptrNode;
+	typedef typename refNode refNode;
 
 public:
-	AStar(GlobalIterator& starter, GlobalIterator& ender) :_starter(starter), _ender(ender)
+	AStar(refNode starter, refNode ender) :_starter(starter), _ender(ender)
 	{
 	}
 	void outPutWay()
 	{
-		std::vector<GlobalIterator> way = findPath();
+		std::vector<Node> way = findPath();
 		if (!way.empty())
 		{
 			for (std::vector<order>::reverse_iterator iterWay = way.rbegin();
@@ -43,76 +46,85 @@ public:
 	}
 	~AStar();
 private:
-	std::vector<valueType> getAroundFGH(GlobalIterator iter)
+	std::vector<Node> getAroundFGH(Node node)
 	{
-		std::vector<valueType> around;
-		while (around.front() != ++iter)
+		std::vector<Node> around;
+		for (typename Node::iterator iter = node.begin(); iter != node.end(); iter++)
 		{
-			around.push_back(getFGH();
+			around.push_back(*iter);
 		}
 		return around;
 	}
-	valueType getFGH(GlobalIterator& current, GlobalIterator& parent)
+	valueType getFGH(refNode current, refNode parent)
 	{
 		int g = current - parent;
 		int h = _ender - current;
 		int f = g + h;
 	}
-	std::vector<GlobalIterator> findPath()
+	std::vector<Node> findPath()
 	{
 		if (_starter == NULL || _ender == NULL)
 		{
 			std::cout << "Please select a visible beginning and destination." << std::endl;
-			return std::vector<GlobalIterator>();
+			return std::vector<Node>();
 		}
-		std::vector<GlobalIterator> openList;
-		std::vector<GlobalIterator> closeList;
-		GlobalIterator selectBlock = _starter;
-		GlobalIterator currentBlock;
-		GlobalIterator destination = _ender;
-		openList.push_back(selectBlock);
+		//openList
+		std::vector<Node> openList;
+		//closeList
+		std::vector<Node> closeList;
+		//the node that has minium F
+		Node selectNode = _starter;
+		//the node to operate
+		Node currentNode;
+		//
+		Node destination = _ender;
+		//push the stater
+		openList.push_back(selectNode);
 		do
 		{
-			currentBlock = selectBlock;
-			openList.erase(std::find<typename std::vector<GlobalIterator>::iterator>(openList.begin(), openList.end(), currentBlock));
-			closeList.push_back(currentBlock);
-			std::vector<GlobalIterator> around = getAroundFGH(currentBlock);
-			for (typename std::vector<GlobalIterator>::iterator iter = around.begin();
+			currentNode = selectNode;
+			openList.erase(std::find<typename std::vector<Node>::iterator>(openList.begin(), openList.end(), currentNode));
+			closeList.push_back(currentNode);
+			//get around node and deal with it depends it's situation
+			std::vector<Node> around = getAroundFGH(currentNode);
+			for (typename std::vector<Node>::iterator iter = around.begin();
 				iter != around.end();
 				iter++)
 			{
-				typename std::vector<GlobalIterator>::iterator iterBlock = std::find<typename std::vector<GlobalIterator>::iterator>(openList.begin(), openList.end(), *iter);
-				if (std::find<typename std::vector<GlobalIterator>::iterator>(closeList.begin(), closeList.end(), *iter) != closeList.end())
+				typename std::vector<Node>::iterator iterNode = std::find<typename std::vector<Node>::iterator>(openList.begin(), openList.end(), *iter);
+				if (std::find<typename std::vector<Node>::iterator>(closeList.begin(), closeList.end(), *iter) != closeList.end())
 				{
 
 				}
-				else if (iterBlock != openList.end())
+				else if (iterNode != openList.end())
 				{
 					//rewrite
-					*iterBlock = newBlock;
+					
+					*iterNode = newNode;
 
 				}
-				else if (iterBlock == openList.end())
+				else if (iterNode == openList.end())
 				{
 					openList.push_back(*iter);
 				}
 			}
-			typename std::vector<GlobalIterator>::iterator tmpIter = std::min_element<std::vector<GlobalIterator>::iterator>(openList.begin(), openList.end());
-			selectBlock = *tmpIter;
-		} while (std::find<typename  std::vector<GlobalIterator>::iterator>(openList.begin(), openList.end(), destination) == openList.end()
+			//select the minium node in openList
+			typename std::vector<Node>::iterator tmpIter = std::min_element<std::vector<Node>::iterator>(openList.begin(), openList.end());
+			selectNode = *tmpIter;
+		} while (std::find<typename  std::vector<Node>::iterator>(openList.begin(), openList.end(), destination) == openList.end()
 			&& !openList.empty());
-		std::vector<GlobalIterator> result;
+		std::vector<Node> result;
 		result.push_back(_ender);
-		for (GlobalIterator block = closeList.back(); block != NULL; block = block--)
+		for (Node node = closeList.back(); node != NULL; node = node--)
 		{
-			result.push_back(block);
+			result.push_back(node);
 		}
 
 		return result;
 	}
 private:
-	GlobalIterator _starter;
-	GlobalIterator _ender;
+	ptrNode _starter;
+	ptrNode _ender;
 };
 #endif
 }
