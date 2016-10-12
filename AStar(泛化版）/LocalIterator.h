@@ -1,31 +1,50 @@
 
 
-//LocalIter.h
+//LocalIterator.h
 
-
+#ifndef LOCAL_ITERATOR_H
+#define LOCAL_ITERATOR_H
 namespace huger
 {
-
-template<class nodeType>
+template < class nodeType >
 class LocalIterator
 {
-	typedef typename nodeType::orderType orderType;
-	typedef typename nodeType::distanceType distanceType;
-	typedef typename nodeType valueType;
-	typedef typename nodeType* pointerType;
-	typedef typename nodeType& referenceType;
-	typedef LocalIterator category;
-
-	LocalIterator(pointerType node);
-	LocalIterator(const LocalIterator& otherIterator);
-
-	category operator++();
-	category operator++(int);
-	category operator--();
-	category operator--(int);
-	bool operator==(const LocalIterator& otherIterator);
-	bool operator!=(const LocalIterator& otherIterator);
+	typedef typename nodeType::localIterator localIterator;
+	nodeType operator*()
+	{
+		return **(*ptrIterator);
+	}
+	nodeType* operator->()
+	{
+		return *(*ptrIterator);
+	}
+	bool operator==(LocalIterator& other)
+	{
+		return *ptrIterator == other.ptrIterator;
+	}
+	bool operator!=(LocalIterator& other)
+	{
+		return *ptrIterator != other.ptrIterator;
+	}
+	LocalIterator operator++()
+	{
+		(*ptrIterator)++;
+	}
+	LocalIterator operator++(int)
+	{
+		++(*ptrIterator);
+	}
+	LocalIterator operator--()
+	{
+		(*ptrIterator)--;
+	}
+	LocalIterator operator--(int)
+	{
+		--(*ptrIterator);
+	}
 protected:
-	pointerType _node;
+	LocalIterator* ptrIterator;
 };
 }
+
+#endif
