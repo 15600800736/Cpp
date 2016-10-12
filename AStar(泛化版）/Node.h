@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <stddef.h>
 #include "NodeIterator.h"
+#include <string>
 namespace huger
 {
 template<typename T>
@@ -26,7 +27,6 @@ public:
 	typedef typename NodeIterator<Node> iterator;
 	//-----constructor
 	Node(int order,
-		std::list<Node*> around,
 		valueType data = NULL,
 		int f = 0,
 		int g = 0,
@@ -34,7 +34,6 @@ public:
 		Node* parent = NULL) :
 		_order(order),
 		_data(data),
-		_around(around),
 		_f(f),
 		_g(g),
 		_h(h),
@@ -47,18 +46,14 @@ public:
 		_order = otherNode._order;
 		_data = otherNode._data;
 		_around.clear();
-		std::copy<typename std::list<Node>::const_iterator, typename std::list<Node>::iterator>
-			(otherNode._around.begin(), otherNode._around.end(),
-			_around.begin());
+		_around = otherNode._around;
 		_f = otherNode._f;
 		_g = otherNode._g;
 		_h = otherNode._h;
-		delete _parent;
-		_parent = otherNode._parent,
+		_parent = otherNode._parent;
 	}
 	~Node()
 	{
-		delete
 	}
 	//-----operator overloading
 	inline bool operator==(const Node& otherNode)
@@ -71,12 +66,13 @@ public:
 	}
 	inline bool operator<(const Node& otherNode)
 	{
-		return _f < otherNode._f ? true : false;
+		return _order < otherNode._order ? true : false;
 	}
 	inline bool operator>(const Node& otherNode)
 	{
 		return !(*this < otherNode || *this == otherNode);
 	}
+
 	//I/O interface
 	inline localIterator begin()
 	{
@@ -114,6 +110,13 @@ public:
 	{
 		return _h;
 	}
+	std::string outPutInfo()
+	{
+		char cResult[128];
+		sprintf_s(cResult, "order = %d, data = %d, f = %d, g = %d, h = %d.", _order, _data, _f, _g, _h);
+		std::string result = cResult;
+		return result;
+	}
 	//functional
 	inline void connectTo(Node* otherNode)
 	{
@@ -124,9 +127,11 @@ public:
 		connectTo(otherNode);
 		otherNode->connectTo(this);
 	}
+	inline int compareByF(const Node& otherNode)
+	{
+		return _f < otherNode._f ? -1 : (_f == otherNode._f ? 0 : 1);
+	}
 	//fields
-
-
 protected:
 	orderType _order;
 	std::list<Node*> _around;
