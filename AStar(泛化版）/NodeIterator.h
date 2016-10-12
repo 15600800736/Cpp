@@ -6,15 +6,14 @@
 #define LOCAL_ITERATOR_H
 namespace huger
 {
-template < class nodeType >
+template <typename nodeType,typename iteratorType>
 class NodeIterator
 {
-	typedef typename nodeType::localIterator localIterator;
 public:
 	NodeIterator() :_iterator(NULL)
 	{
 	}
-	NodeIterator(localIterator ptrIterator) :_iterator(ptrIterator)
+	NodeIterator(iteratorType ptrIterator) :_iterator(ptrIterator)
 	{
 	}
 	nodeType operator*()
@@ -33,11 +32,11 @@ public:
 	{
 		return _iterator != other._iterator;
 	}
-	bool operator==(localIterator& otherLoc)
+	bool operator==(iteratorType& otherLoc)
 	{
 		return _iterator == otherLoc;
 	}
-	bool operator!=(localIterator& otherLoc)
+	bool operator!=(iteratorType& otherLoc)
 	{
 		return _iterator != otherLoc;
 	}
@@ -50,29 +49,29 @@ public:
 		_iterator = other._iterator;
 		return *this;
 	}
-	NodeIterator& operator=(const localIterator& otherLoc)
+	NodeIterator& operator=(const iteratorType& otherLoc)
 	{
 		_iterator = otherLoc;
 		return *this;
 	}
-	localIterator operator++()
+	iteratorType operator++()
 	{
 		return _iterator++;
 	}
-	localIterator operator++(int)
+	iteratorType operator++(int)
 	{
 		return ++_iterator;
 	}
-	localIterator operator--()
+	iteratorType operator--()
 	{
 		return _iterator--;
 	}
-	localIterator operator--(int)
+	iteratorType operator--(int)
 	{
 		return --_iterator;
 	}
 protected:
-	localIterator _iterator;
+	iteratorType _iterator;
 };
 }
 

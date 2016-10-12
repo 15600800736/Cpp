@@ -53,6 +53,12 @@ public:
 			std::cout<<iter->outPutInfo()<<std::endl;
 		}
 		std::cout << std::endl;
+		std::cout << "node[0]'s reverse neighbor" << std::endl;
+		for (Node<int>::reverseIterator riter = node[0].rbegin(); riter != node[0].rend(); riter ++ )
+		{
+			std::cout << riter->outPutInfo() << std::endl;
+		}
+		std::cout << std::endl;
 		std::cout << "node[3]'s neighbors" << std::endl;
 		for (Node<int>::iterator iter = node[3].begin(); iter != node[3].end(); iter++)
 		{

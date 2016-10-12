@@ -24,7 +24,9 @@ public:
 	typedef typename T& referenceType;
 
 	typedef typename std::list<Node*>::iterator localIterator;
-	typedef typename NodeIterator<Node> iterator;
+	typedef typename std::list<Node*>::reverse_iterator reverseLocalIterator;
+	typedef typename NodeIterator<Node,localIterator> iterator;
+	typedef typename NodeIterator<Node, reverseLocalIterator> reverseIterator;
 	//-----constructor
 	Node(int order,
 		valueType data = NULL,
@@ -81,6 +83,14 @@ public:
 	inline localIterator end()
 	{
 		return _around.end();
+	}
+	inline reverseLocalIterator rbegin()
+	{
+		return _around.rbegin();
+	}
+	inline reverseLocalIterator rend()
+	{
+		return _around.rend();
 	}
 	inline Node* getParent()const
 	{
