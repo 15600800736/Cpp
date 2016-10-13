@@ -3,6 +3,18 @@
 
 //Node.h
 
+/*
+ *
+ *	A class that abstracts data structure-Node.
+ *	Node is implemented by std::list at bottom.
+ *	Node has three members G,H,F to represent the cost of moving from one to another.
+ *	Node's iterator is an repackaging list's iterator which redefine operator* and -> 
+ *	to make the list<Node*>::iterator act as list<Node>::iterator
+ *	Node is only identificated by member-_order,
+ *	which means that a node equals another one only when they have same order.
+ *	Node's data is used for restoring extra data.
+ *
+ */
 #ifndef NODE_H
 #define NODE_H
 
@@ -27,22 +39,31 @@ public:
 	typedef typename std::list<Node*>::reverse_iterator reverseLocalIterator;
 	typedef typename NodeIterator<Node,localIterator> iterator;
 	typedef typename NodeIterator<Node, reverseLocalIterator> reverseIterator;
-	//-----constructor
+
+	///////////////////////////////////////////////////////////////////////
+	//	-Node's contructor
+	//	-create an node with empty neighbor
+	//	@parameter order - the only identifaction of node
+	//	@parameter data - extra data of the node
+	//	@parameter g,h - cost of moving
+	//	@parameter parent - the node when it takes backward
 	Node(int order,
 		valueType data = NULL,
-		int f = 0,
 		int g = 0,
 		int h = 0,
 		Node* parent = NULL) :
 		_order(order),
 		_data(data),
-		_f(f),
 		_g(g),
 		_h(h),
 		_parent(parent)
 	{
-
+		caculateF();
 	}
+	////////////////////////////////////////////////////////////////////////
+	//	-Node's copy constructor
+	//	-assigned by the other node
+	//	@parameter otherNode - the source
 	Node(const Node& otherNode)
 	{
 		_order = otherNode._order;
@@ -54,72 +75,118 @@ public:
 		_h = otherNode._h;
 		_parent = otherNode._parent;
 	}
+	////////////////////////////////////////////////////////////////////////
+	//	-Node's destructor
 	~Node()
 	{
 	}
-	//-----operator overloading
+	//-----operator overloading.
+
+	////////////////////////////////////////////////////////////////////////
+	//	-overlaoding operator==
+	//	-when an node's order equals the other node's order
+	//	@parameter otherNode - the source
 	inline bool operator==(const Node& otherNode)
 	{
 		return _order == otherNode._order ? true : false;
 	}
+	////////////////////////////////////////////////////////////////////////
+	//	-overlaoding operator==
+	//	-when an node's order doesn't equal the other node's order
+	//	@parameter otherNode - the source
 	inline bool operator!=(const Node& otherNode)
 	{
 		return !(*this == otherNode);
 	}
+	////////////////////////////////////////////////////////////////////////
+	//	-overlaoding operator==
+	//	-when an node's order is less than the other node's order
+	//	@parameter otherNode - the source
 	inline bool operator<(const Node& otherNode)
 	{
 		return _order < otherNode._order ? true : false;
 	}
+	////////////////////////////////////////////////////////////////////////
+	//	-overlaoding operator==
+	//	-when an node's order is bigger than the other node's order
+	//	@parameter otherNode - the source
 	inline bool operator>(const Node& otherNode)
 	{
 		return !(*this < otherNode || *this == otherNode);
 	}
-
 	//I/O interface
+
+	/////////////////////////////////////////////////////////////////////////
+	//	-return node's first element for iterator
 	inline localIterator begin()
 	{
 		return _around.begin();
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-return node's end for iterator
 	inline localIterator end()
 	{
 		return _around.end();
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-return node's last element for reverse_iterator
 	inline reverseLocalIterator rbegin()
 	{
 		return _around.rbegin();
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-return node's end for reverse_iterator
 	inline reverseLocalIterator rend()
 	{
 		return _around.rend();
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-get parent.
 	inline Node* getParent()const
 	{
 		return _parent;
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-set parent
+	//	@parameter otherNode - the source
 	inline void setParent(Node* parent)
 	{
 		_parent = parent;
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-return reference for order
+	//	-convenience for reading and writing
 	inline orderType& order()
 	{
 		return _order;
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-return reference for data
+	//	-convenience for reading and writing
 	inline valueType& data()
 	{
 		return _data;
 	}
-	inline int& F()
+	/////////////////////////////////////////////////////////////////////////
+	//	-return f
+	inline int getF()const
 	{
 		return _f;
 	}
-	inline int& G()
+	/////////////////////////////////////////////////////////////////////////
+	//	-return g
+	inline int getG()const
 	{
 		return _g;
 	}
-	inline int& H()
+	/////////////////////////////////////////////////////////////////////////
+	//	-return h
+	inline int getH()const
 	{
 		return _h;
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-transfer all of the member's value to string to output
 	std::string outPutInfo()
 	{
 		char cResult[128];
@@ -128,27 +195,68 @@ public:
 		return result;
 	}
 	//functional
+
+	/////////////////////////////////////////////////////////////////////////
+	//	-build the connection unilateral
+	//	-which means this node can reach to otherNode,but contrary,can't
+	//	@parameter otherNode - the node to connect to
 	inline void connectTo(Node* otherNode)
 	{
 		_around.push_back(otherNode);
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-build the connection between the two nodes
+	//	-you can reach to the other one starting from anyone
+	//	@parameter otherNode - the node to connect with
 	inline void connectWith(Node* otherNode)
 	{
 		connectTo(otherNode);
 		otherNode->connectTo(this);
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-compared another node by F value
+	//	-return 0 if equlas,1 if this node bigger than other and -1 for the contrary
+	//	@parameter otherNode - source to compare
 	inline int compareByF(const Node& otherNode)
 	{
 		return _f < otherNode._f ? -1 : (_f == otherNode._f ? 0 : 1);
+	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-caculate the g value
+	//	@parameter parent - the node which you start from
+	inline void caculateG(Node& start)
+	{
+
+	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-caculate the h value
+	//	@parameter parent - the node which you are going to
+	inline void caculateH(Node& destination)
+	{
+
+	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-get the f value
+	//	-with different algorithm of combinning g and h
+	inline void caculateF()
+	{
+		_f = caculateFwithGH();
+	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-caculate the f value
+	//	-the algorithm of caculate f with certain g and h
+	inline int caculateFwithGH()
+	{
+		return _g + _h;
 	}
 	//fields
 protected:
 	orderType _order;
 	std::list<Node*> _around;
 	valueType _data;
-	int _f;
 	int _g;
 	int _h;
+	int _f;
 	Node* _parent;
 };
 }
