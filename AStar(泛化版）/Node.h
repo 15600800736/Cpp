@@ -26,10 +26,11 @@
 namespace huger
 {
 template<typename T>
+class NodeFactor;
+template<typename T>
 class Node
 {
 public:
-	typedef int orderType;
 	typedef int distanceType;
 	typedef typename T valueType;
 	typedef typename T* pointerType;
@@ -40,26 +41,7 @@ public:
 	typedef typename NodeIterator<Node,localIterator> iterator;
 	typedef typename NodeIterator<Node, reverseLocalIterator> reverseIterator;
 
-	///////////////////////////////////////////////////////////////////////
-	//	-Node's contructor
-	//	-create an node with empty neighbor
-	//	@parameter order - the only identifaction of node
-	//	@parameter data - extra data of the node
-	//	@parameter g,h - cost of moving
-	//	@parameter parent - the node when it takes backward
-	Node(int order,
-		valueType data = NULL,
-		int g = 0,
-		int h = 0,
-		Node* parent = NULL) :
-		_order(order),
-		_data(data),
-		_g(g),
-		_h(h),
-		_parent(parent)
-	{
-		caculateF();
-	}
+
 	////////////////////////////////////////////////////////////////////////
 	//	-Node's copy constructor
 	//	-assigned by the other node
@@ -91,7 +73,7 @@ public:
 		return _order == otherNode._order ? true : false;
 	}
 	////////////////////////////////////////////////////////////////////////
-	//	-overlaoding operator==
+	//	-overlaoding operator!=
 	//	-when an node's order doesn't equal the other node's order
 	//	@parameter otherNode - the source
 	inline bool operator!=(const Node& otherNode)
@@ -99,7 +81,7 @@ public:
 		return !(*this == otherNode);
 	}
 	////////////////////////////////////////////////////////////////////////
-	//	-overlaoding operator==
+	//	-overlaoding operator<
 	//	-when an node's order is less than the other node's order
 	//	@parameter otherNode - the source
 	inline bool operator<(const Node& otherNode)
@@ -107,7 +89,7 @@ public:
 		return _order < otherNode._order ? true : false;
 	}
 	////////////////////////////////////////////////////////////////////////
-	//	-overlaoding operator==
+	//	-overlaoding operator>
 	//	-when an node's order is bigger than the other node's order
 	//	@parameter otherNode - the source
 	inline bool operator>(const Node& otherNode)
@@ -156,7 +138,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//	-return reference for order
 	//	-convenience for reading and writing
-	inline orderType& order()
+	inline int& order()
 	{
 		return _order;
 	}
@@ -249,15 +231,70 @@ public:
 	{
 		return _g + _h;
 	}
+	friend class NodeFactor<T>;
 	//fields
 protected:
-	orderType _order;
+	int _order;
 	std::list<Node*> _around;
 	valueType _data;
 	int _g;
 	int _h;
 	int _f;
 	Node* _parent;
+private:
+	///////////////////////////////////////////////////////////////////////
+	//	-Node's contructor
+	//	-create an node with empty neighbor
+	//	@parameter order - the only identifaction of node
+	//	@parameter data - extra data of the node
+	//	@parameter g,h - cost of moving
+	//	@parameter parent - the node when it takes backward
+	Node(int order,
+		valueType data = NULL,
+		Node* parent = NULL) :
+		_order(order),
+		_data(data),
+		_g(0),
+		_h(0),
+		_f(0),
+		_parent(parent)
+	{
+	}
+
 };
+
+/*
+ *
+ */
+template<typename T>
+class NodeFactor
+{
+public:
+	static Node<T>* createNodeInHeap(
+		typename Node<T>::valueType data = NULL,
+		Node<T>* parent = NULL)
+	{
+		Node<T> *ptrNode =  new Node<T>(_order, data, parent);
+		_order++;
+		return ptrNode;
+	}
+	static Node<T> createNodeInStack(
+		typename Node<T>::valueType data = NULL,
+		Node<T>* parent = NULL)
+	{
+		Node<T> node(_order, data, parent);
+		_order++;
+		return node;
+	}
+	static void destruct(Node<T>* node)
+	{
+		node->~Node();
+		delete node;
+	}
+private:
+	static int _order;
+};
+template<typename T>
+int NodeFactor<T>::_order = 0;
 }
 #endif

@@ -6,6 +6,6 @@ using namespace huger;
 
 void main()
 {
-	UnitTestNode nodeTest;
-	nodeTest.methodTest();
+	UnitTestNode test;
+	test.methodTest();
 }

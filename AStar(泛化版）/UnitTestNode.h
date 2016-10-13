@@ -15,7 +15,7 @@ public:
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			node.push_back(Node<int>(i));
+			node.push_back(NodeFactor<int>::createNodeInStack());
 		}
 		node[0].connectTo(&node[1]);
 		node[0].connectTo(&node[2]);
@@ -73,6 +73,29 @@ public:
 		std::cout << std::endl;
 		std::cout << "iter01 == iter01Copy" << std::endl;
 		std::cout << (iter01 == iter01Copy) << std::endl;
+		std::cout << std::endl;
+		Node<int>::iterator iter = node[0].begin();
+		std::cout << "iter's order:" << std::endl;
+		std::cout << iter->order() << std::endl;
+		Node<int>::iterator prePlusIter = ++iter;
+		std::cout << "prePlusIter's order:" << std::endl;
+		std::cout << prePlusIter->order() << std::endl;
+		iter = node[0].begin();
+		Node<int>::iterator posPlusIter = iter++;
+		std::cout << "posPlusIter's order:" << std::endl;
+		std::cout << posPlusIter->order() << std::endl;
+		std::cout << std::endl;
+		iter = ++node[0].begin();
+		std::cout << "iter's order:" << std::endl;
+		std::cout << iter->order() << std::endl;
+		Node<int>::iterator preMinusIter = --iter;
+		std::cout << "preMinusIter's order:" << std::endl;
+		std::cout << preMinusIter->order() << std::endl;
+		iter = ++node[0].begin();
+		Node<int>::iterator posMinusIter = iter--;
+		std::cout << "posMinusIter's order:" << std::endl;
+		std::cout << posMinusIter->order() << std::endl;
+		std::cout << std::endl;
 	}
 private:
 	std::vector <Node<int> >  node;
