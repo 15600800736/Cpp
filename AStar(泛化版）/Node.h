@@ -19,10 +19,12 @@
 #define NODE_H
 
 #include <list>
+#include <queue>
 #include <algorithm>
 #include <stddef.h>
-#include "NodeIterator.h"
 #include <string>
+
+#include "NodeIterator.h"
 namespace huger
 {
 template<typename T>
@@ -59,7 +61,7 @@ public:
 	}
 	////////////////////////////////////////////////////////////////////////
 	//	-Node's destructor
-	~Node()
+	virtual ~Node()
 	{
 	}
 	//-----operator overloading.
@@ -260,10 +262,12 @@ private:
 		_parent(parent)
 	{
 	}
-
 };
 
 /*
+ *
+ *	Node factory to creato nodes with insurance order
+ *	Make sure that different nodes has different order
  *
  */
 template<typename T>
@@ -274,27 +278,46 @@ public:
 		typename Node<T>::valueType data = NULL,
 		Node<T>* parent = NULL)
 	{
-		Node<T> *ptrNode =  new Node<T>(_order, data, parent);
-		_order++;
-		return ptrNode;
+		if (_availiableOrder->empty())
+		{
+			return new Node<T>(_order++, data, parent);
+		}
+		else
+		{
+			int order = _availiableOrder->front();
+			_availiableOrder->pop();
+			return new Node<T>(order, data, parent);
+		}
 	}
 	static Node<T> createNodeInStack(
 		typename Node<T>::valueType data = NULL,
 		Node<T>* parent = NULL)
 	{
-		Node<T> node(_order, data, parent);
-		_order++;
-		return node;
+		if (_availiableOrder->empty())
+		{
+			Node<T> node(_order++, data, parent);
+			return node;
+		}
+		else
+		{
+			int order = _availiableOrder->front();
+			_availiableOrder->pop();
+			Node<T> node(order, data, parent);
+			return node;
+		}
 	}
 	static void destruct(Node<T>* node)
 	{
+		_availiableOrder->push(node->order());
 		node->~Node();
-		delete node;
 	}
 private:
 	static int _order;
+	static std::queue<int>* _availiableOrder;
 };
 template<typename T>
 int NodeFactor<T>::_order = 0;
+template<typename T>
+std::queue<int>*  NodeFactor<T>::_availiableOrder  = new std::queue<int>();
 }
 #endif

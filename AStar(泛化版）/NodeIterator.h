@@ -105,8 +105,8 @@ public:
 	//	-return this iterator and make iterator point to next one
 	NodeIterator operator++()
 	{
-		NodeIterator result = ++_iterator;
-		return result;
+		++_iterator;
+		return *this;
 	}	
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator++
@@ -121,8 +121,8 @@ public:
 	//	-return this iterator and make iterator point to last one
 	NodeIterator operator--()
 	{
-		NodeIterator result = --_iterator;
-		return result;
+		--_iterator;
+		return *this;
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator++

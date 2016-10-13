@@ -21,9 +21,13 @@ public:
 		node[0].connectTo(&node[2]);
 		node[0].connectWith(&node[3]);
 		node[1].connectWith(&node[3]);
+
 	}
 	void methodTest()
 	{
+		Node<int>* ptrNode4 = NodeFactor<int>::createNodeInHeap();
+		Node<int>* ptrNode5 = NodeFactor<int>::createNodeInHeap();
+		Node<int>* ptrNode6 = NodeFactor<int>::createNodeInHeap();
 		std::cout << "Test Node" << std::endl;
 		//copy constructor test
 		Node<int> node0Copy(node[0]);
@@ -95,6 +99,21 @@ public:
 		Node<int>::iterator posMinusIter = iter--;
 		std::cout << "posMinusIter's order:" << std::endl;
 		std::cout << posMinusIter->order() << std::endl;
+		std::cout << std::endl;
+		std::cout << "node4,node5,node6's order:" << std::endl;
+		std::cout << ptrNode4->order() << std::endl << ptrNode5->order() << std::endl << ptrNode6->order() << std::endl;
+		std::cout << "destructor node4 and node5 and rebuilt two nodes" << std::endl;
+		NodeFactor<int>::destruct(ptrNode4);
+		NodeFactor<int>::destruct(ptrNode5);
+		Node<int> reNode4 = NodeFactor<int>::createNodeInStack();
+		Node<int> reNode5 = NodeFactor<int>::createNodeInStack();
+		std::cout << "rebuild node's order" << std::endl;
+		std::cout << reNode4.order() << std::endl;
+		std::cout << reNode5.order() << std::endl;
+		std::cout << "built a new node assert order = 7" << std::endl;
+		Node<int> node7 = NodeFactor<int>::createNodeInStack();
+		std::cout << node7.order() << std::endl;
+		NodeFactor<int>::destruct(ptrNode6);
 		std::cout << std::endl;
 	}
 private:
