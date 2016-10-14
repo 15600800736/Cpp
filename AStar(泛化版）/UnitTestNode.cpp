@@ -17,10 +17,10 @@ namespace huger
 			{
 				node.push_back(nodeFactoryForTest->createNodeInStack({ i, i }));
 			}
-			node[0].connectTo(&node[1]);
-			node[0].connectTo(&node[2]);
-			node[0].connectWith(&node[3]);
-			node[1].connectWith(&node[3]);
+			node[0].connectTo(node[1]);
+			node[0].connectTo(node[2]);
+			connectWith(node[0], node[3]);
+			connectWith(node[1], node[3]);
 
 		}
 		void methodTest()
@@ -69,6 +69,12 @@ namespace huger
 				std::cout << iter->toString() << std::endl;
 			}
 			std::cout << std::endl;
+			std::cout << "cut node[0] and node[1]" << std::endl;
+			cutWith(node[0], node[1]);
+			for (Node<int>::reverseIterator riter = node[0].rbegin(); riter != node[0].rend(); riter++)
+			{
+				std::cout << riter->toString() << std::endl;
+			}
 			Node<int>::iterator iter01 = node[0].begin();
 			Node<int>::iterator iter02 = node[0].begin();
 			Node<int>::iterator iter01Copy(iter01);

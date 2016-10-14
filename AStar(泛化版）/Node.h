@@ -4,21 +4,21 @@
 //Node.h
 
 /*
- *
- *	A class that abstracts data structure-Node.
- *	Node is implemented by std::list at bottom.
- *	Node has three members G,H,F to represent the cost of moving from one to another.
- *	Node's iterator is an repackaging list's iterator which redefine operator* and -> 
- *	to make the list<Node*>::iterator act as list<Node>::iterator
- *	Node is only identificated by member-_order,
- *	which means that a node equals another one only when they have same order.
- *	Node's data is used for restoring extra data.
- *
- */
+*
+*	A class that abstracts data structure-Node.
+*	Node is implemented by std::set at bottom.
+*	Node has three members G,H,F to represent the cost of moving from one to another.
+*	Node's iterator is an repackaging set's iterator which redefine operator* and -> 
+*	to make the set<Node*>::iterator act as set<Node>::iterator
+*	Node is only identificated by member-_order,
+*	which means that a node equals another one only when they have same order.
+*	Node's data is used for restoring extra data.
+*
+*/
 #ifndef NODE_H
 #define NODE_H
 
-#include <list>
+#include <set>
 #include <stack>
 #include <algorithm>
 #include <stddef.h>
@@ -39,9 +39,9 @@ public:
 	typedef typename T* pointerType;
 	typedef typename T& referenceType;
 
-	typedef typename std::list<Node*>::iterator localIterator;
-	typedef typename std::list<Node*>::reverse_iterator reverseLocalIterator;
-	typedef typename NodeIterator<Node,localIterator> iterator;
+	typedef typename std::set<Node*>::iterator localIterator;
+	typedef typename std::set<Node*>::reverse_iterator reverseLocalIterator;
+	typedef typename NodeIterator<Node, localIterator> iterator;
 	typedef typename NodeIterator<Node, reverseLocalIterator> reverseIterator;
 
 
@@ -54,8 +54,8 @@ public:
 		_order = otherNode._order;
 		_coord = otherNode._coord;
 		_data = otherNode._data;
-		_around.clear();
-		_around = otherNode._around;
+		_neighbor.clear();
+		_neighbor = otherNode._neighbor;
 		_f = otherNode._f;
 		_g = otherNode._g;
 		_h = otherNode._h;
@@ -106,25 +106,25 @@ public:
 	//	-return node's first element for iterator
 	inline localIterator begin()
 	{
-		return _around.begin();
+		return _neighbor.begin();
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return node's end for iterator
 	inline localIterator end()
 	{
-		return _around.end();
+		return _neighbor.end();
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return node's last element for reverse_iterator
 	inline reverseLocalIterator rbegin()
 	{
-		return _around.rbegin();
+		return _neighbor.rbegin();
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return node's end for reverse_iterator
 	inline reverseLocalIterator rend()
 	{
-		return _around.rend();
+		return _neighbor.rend();
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-get parent
@@ -198,25 +198,16 @@ public:
 	//	-build the connection unilateral
 	//	-which means this node can reach to otherNode,but contrary,can't
 	//	@parameter otherNode - the node to connect to
-	inline void connectTo(Node* otherNode)
+	inline void connectTo(Node& otherNode)
 	{
-		_around.push_back(otherNode);
-	}
-	/////////////////////////////////////////////////////////////////////////
-	//	-build the connection between the two nodes
-	//	-you can reach to the other one starting from anyone
-	//	@parameter otherNode - the node to connect with
-	inline void connectWith(Node* otherNode)
-	{
-		connectTo(otherNode);
-		otherNode->connectTo(this);
+		_neighbor.insert(&otherNode);
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-cut the connection with an neighbor unilateral
 	//	@parameter neighbor - the neighbor to cut with
-	inline void cutWith(iterator neighbor)
+	inline void cutTo(Node& neighbor)
 	{
-
+		_neighbor.erase(&neighbor);
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-compared another node by F value
@@ -237,7 +228,7 @@ public:
 	//	-caculate the h value
 	//	@parameter start - the node which you come from
 	//	@parameter parent - the node which you are going to
-	inline void caculateH(Node& start,Node& destination)
+	inline void caculateH(Node& start, Node& destination)
 	{
 		Coord vecStartToCurrent(_coord - start._coord);
 		Coord vecStartToDestination(destination._coord - start._coord);
@@ -251,11 +242,11 @@ public:
 		_f = _g + 5 * _h;
 	}
 
-	friend class NodeFactory<T>;
+	friend class NodeFactory < T > ;
 	//fields
 protected:
 	int _order;
-	std::list<Node*> _around;
+	std::set<Node*> _neighbor;
 	valueType _data;
 	int _g;
 	int _h;
@@ -287,11 +278,11 @@ private:
 };
 
 /*
- *
- *	Node factory to creato nodes with insurance order
- *	Make sure that different nodes has different order
- *
- */
+	*
+	*	Node factory to create nodes with insurance order
+	*	Make sure that different nodes has different order
+	*
+	*/
 template<typename T>
 class NodeFactory
 {
@@ -316,7 +307,7 @@ public:
 	{
 		if (_availiableOrder.size() == 1)
 		{
-			Node<int>* node = new Node<int>(_availiableOrder.top(),coord);
+			Node<int>* node = new Node<int>(_availiableOrder.top(), coord);
 			int tmp = _availiableOrder.top();
 			_availiableOrder.pop();
 			_availiableOrder.push(++tmp);
@@ -324,7 +315,7 @@ public:
 		}
 		else
 		{
-			Node<int>* node = new Node<int>(_availiableOrder.top(),coord);
+			Node<int>* node = new Node<int>(_availiableOrder.top(), coord);
 			_availiableOrder.pop();
 			return node;
 		}
@@ -338,7 +329,7 @@ public:
 	{
 		if (_availiableOrder.size() == 1)
 		{
-			Node<int> node(_availiableOrder.top(),coord);
+			Node<int> node(_availiableOrder.top(), coord);
 			int tmp = _availiableOrder.top();
 			_availiableOrder.pop();
 			_availiableOrder.push(++tmp);
@@ -346,7 +337,7 @@ public:
 		}
 		else
 		{
-			Node<int> node(_availiableOrder.top(),coord);
+			Node<int> node(_availiableOrder.top(), coord);
 			_availiableOrder.pop();
 			return node;
 		}
@@ -362,5 +353,30 @@ public:
 private:
 	std::stack<int> _availiableOrder;
 };
+
+///////////////////////////////////////////////////////////////////////////////////////
+//	`-connet two nodes with each other
+//	@parameter firstNode - the first node to connect
+//	@paramater secondNode - the second node to connect
+template<typename T>void connectWith(Node<T>& firstNode, Node<T>& secondNode)
+{
+	if ((&firstNode) != NULL && (&secondNode) != NULL)
+	{
+		firstNode.connectTo(secondNode);
+		secondNode.connectTo(firstNode);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////
+//	`-seperate two nodes
+//	@parameter firstNode - the first node to cut
+//	@paramater secondNode - the second node to cut
+template<typename T>void cutWith(Node<T>& firstNode, Node<T>& secondNode)
+{
+	if ((&firstNode) != NULL && (&secondNode) != NULL)
+	{
+		firstNode.cutTo(secondNode);
+		secondNode.cutTo(firstNode);
+	}
+}
 }
 #endif
