@@ -15,7 +15,6 @@
  *	Node's data is used for restoring extra data.
  *
  */
-enum Memory{ STACK, HEAP };
 #ifndef NODE_H
 #define NODE_H
 
@@ -26,10 +25,11 @@ enum Memory{ STACK, HEAP };
 #include <string>
 
 #include "NodeIterator.h"
+#include "Coord.h"
 namespace huger
 {
 template<typename T>
-class NodeFactor;
+class NodeFactory;
 template<typename T>
 class Node
 {
@@ -52,6 +52,7 @@ public:
 	Node(const Node& otherNode)
 	{
 		_order = otherNode._order;
+		_coord = otherNode._coord;
 		_data = otherNode._data;
 		_around.clear();
 		_around = otherNode._around;
@@ -126,7 +127,7 @@ public:
 		return _around.rend();
 	}
 	/////////////////////////////////////////////////////////////////////////
-	//	-get parent.
+	//	-get parent
 	inline Node* getParent()const
 	{
 		return _parent;
@@ -137,6 +138,18 @@ public:
 	inline void setParent(Node* parent)
 	{
 		_parent = parent;
+	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-get coord
+	inline Coord getCoord()const
+	{
+		return _coord;
+	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-set Coord
+	inline void setCoord(Coord coord)
+	{
+		_coord = coord;
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return reference for order
@@ -199,6 +212,13 @@ public:
 		otherNode->connectTo(this);
 	}
 	/////////////////////////////////////////////////////////////////////////
+	//	-cut the connection with an neighbor unilateral
+	//	@parameter neighbor - the neighbor to cut with
+	inline void cutWith(iterator neighbor)
+	{
+
+	}
+	/////////////////////////////////////////////////////////////////////////
 	//	-compared another node by F value
 	//	-return 0 if equlas,1 if this node bigger than other and -1 for the contrary
 	//	@parameter otherNode - source to compare
@@ -211,30 +231,27 @@ public:
 	//	@parameter parent - the node which you start from
 	inline void caculateG(Node& start)
 	{
-
+		_g = abs(start._coord.X - _coord.X) + abs(start._coord.Y - _coord.Y);
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-caculate the h value
+	//	@parameter start - the node which you come from
 	//	@parameter parent - the node which you are going to
-	inline void caculateH(Node& destination)
+	inline void caculateH(Node& start,Node& destination)
 	{
-
+		Coord vecStartToCurrent(_coord - start._coord);
+		Coord vecStartToDestination(destination._coord - start._coord);
+		_h = abs(destination._coord.X - _coord.X) + abs(destination._coord.Y - _coord.Y) + vecStartToCurrent.cross(vecStartToDestination);
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-get the f value
 	//	-with different algorithm of combinning g and h
 	inline void caculateF()
 	{
-		_f = caculateFwithGH();
+		_f = _g + 5 * _h;
 	}
-	/////////////////////////////////////////////////////////////////////////
-	//	-caculate the f value
-	//	-the algorithm of caculate f with certain g and h
-	inline int caculateFwithGH()
-	{
-		return _g + _h;
-	}
-	friend class NodeFactor<T>;
+
+	friend class NodeFactory<T>;
 	//fields
 protected:
 	int _order;
@@ -244,18 +261,22 @@ protected:
 	int _h;
 	int _f;
 	Node* _parent;
+	Coord _coord;
 private:
 	///////////////////////////////////////////////////////////////////////
 	//	-Node's contructor
 	//	-create an node with empty neighbor
 	//	@parameter order - the only identifaction of node
+	//	@parameter coord - the abstract of position
 	//	@parameter data - extra data of the node
 	//	@parameter g,h - cost of moving
 	//	@parameter parent - the node when it takes backward
 	Node(int order,
+		Coord coord,
 		valueType data = NULL,
 		Node* parent = NULL) :
 		_order(order),
+		_coord(coord),
 		_data(data),
 		_g(0),
 		_h(0),
@@ -272,73 +293,74 @@ private:
  *
  */
 template<typename T>
-class NodeFactor
+class NodeFactory
 {
 public:
 	///////////////////////////////////////////////////////////////////////////////////
+	//	-constructor
+	//	@paramater startFrom - the minimum order of this factor's nodes
+	NodeFactory(int startFrom = 0)
+	{
+		_availiableOrder.push(startFrom);
+	}
+	virtual ~NodeFactory()
+	{
+	}
+	///////////////////////////////////////////////////////////////////////////////////
 	//	-Creat a node in heap
 	//	-destruct with function NodeFactor<T>::destruct
-	static Node<T>* createNodeInHeap(
+	Node<T>* createNodeInHeap(
+		Coord coord,
 		typename Node<T>::valueType data = NULL,
-		Node<T>* parent = NULL,
-		Memory m = STACK)
+		Node<T>* parent = NULL)
 	{
-		if (_availiableOrder->empty())
+		if (_availiableOrder.size() == 1)
 		{
-			_availiableOrder->push(0);
-		}
-		if (_availiableOrder->size() == 1)
-		{
-			Node<int>* node = new Node<int>(_availiableOrder->top());
-			int tmp = _availiableOrder->top();
-			_availiableOrder->pop();
-			_availiableOrder->push(++tmp);
+			Node<int>* node = new Node<int>(_availiableOrder.top(),coord);
+			int tmp = _availiableOrder.top();
+			_availiableOrder.pop();
+			_availiableOrder.push(++tmp);
 			return node;
 		}
 		else
 		{
-			Node<int>* node = new Node<int>(_availiableOrder->top());
-			_availiableOrder->pop();
+			Node<int>* node = new Node<int>(_availiableOrder.top(),coord);
+			_availiableOrder.pop();
 			return node;
 		}
 	}
 	////////////////////////////////////////////////////////////////////////////////////
 	//	-Creat a node in stack
-	static Node<T> createNodeInStack(
+	Node<T> createNodeInStack(
+		Coord coord,
 		typename Node<T>::valueType data = NULL,
 		Node<T>* parent = NULL)
 	{
-		if (_availiableOrder->empty())
+		if (_availiableOrder.size() == 1)
 		{
-			_availiableOrder->push(0);
-		}
-		if (_availiableOrder->size() == 1)
-		{
-			Node<int> node(_availiableOrder->top());
-			int tmp = _availiableOrder->top();
-			_availiableOrder->pop();
-			_availiableOrder->push(++tmp);
+			Node<int> node(_availiableOrder.top(),coord);
+			int tmp = _availiableOrder.top();
+			_availiableOrder.pop();
+			_availiableOrder.push(++tmp);
 			return node;
 		}
 		else
 		{
-			Node<int> node(_availiableOrder->top());
-			_availiableOrder->pop();
+			Node<int> node(_availiableOrder.top(),coord);
+			_availiableOrder.pop();
 			return node;
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////
 	//	-Destruct a node in stack
 	//	-record the order
-	static void destruct(Node<T>* node)
+	void destruct(Node<T>* node)
 	{
-		_availiableOrder->push(node->order());
+		_availiableOrder.push(node->order());
 		node->~Node();
 	}
 private:
-	static std::stack<int>* _availiableOrder;
+	std::stack<int> _availiableOrder;
 };
-template<typename T>
-std::stack<int>* NodeFactor<T>::_availiableOrder = new std::stack<int>();
 }
 #endif
