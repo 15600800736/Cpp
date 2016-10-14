@@ -171,7 +171,7 @@ public:
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-transfer all of the member's value to string to output
-	std::string outPutInfo()
+	std::string toString()
 	{
 		char cResult[128];
 		sprintf_s(cResult, "order = %d, data = %d, f = %d, g = %d, h = %d.", _order, _data, _f, _g, _h);
@@ -274,6 +274,9 @@ template<typename T>
 class NodeFactor
 {
 public:
+	///////////////////////////////////////////////////////////////////////////////////
+	//	-Creat a node in heap
+	//	-destruct with function NodeFactor<T>::destruct
 	static Node<T>* createNodeInHeap(
 		typename Node<T>::valueType data = NULL,
 		Node<T>* parent = NULL)
@@ -289,6 +292,8 @@ public:
 			return new Node<T>(order, data, parent);
 		}
 	}
+	////////////////////////////////////////////////////////////////////////////////////
+	//	-Creat a node in stack
 	static Node<T> createNodeInStack(
 		typename Node<T>::valueType data = NULL,
 		Node<T>* parent = NULL)
@@ -306,6 +311,9 @@ public:
 			return node;
 		}
 	}
+	////////////////////////////////////////////////////////////////////////////////////
+	//	-Destruct a node in stack
+	//	-record the order
 	static void destruct(Node<T>* node)
 	{
 		_availiableOrder->push(node->order());

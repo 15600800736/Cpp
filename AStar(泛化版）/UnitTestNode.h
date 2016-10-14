@@ -33,10 +33,10 @@ public:
 		Node<int> node0Copy(node[0]);
 		Node<int> node1Copy = node[1];
 		std::cout << "node0Copy's information" << std::endl;
-		std::cout << node0Copy.outPutInfo()<< std::endl;
+		std::cout << node0Copy.toString()<< std::endl;
 		std::cout << std::endl;
 		std::cout << "node1Copy's information" << std::endl;
-		std::cout << node1Copy.outPutInfo() << std::endl;
+		std::cout << node1Copy.toString() << std::endl;
 		std::cout << std::endl;
 		//operator overloding test
 		std::cout << "node[0] == node0Copy" << std::endl;
@@ -54,19 +54,19 @@ public:
 		std::cout << "node[0]'s neighbors" << std::endl;
 		for (Node<int>::iterator iter = node[0].begin(); iter != node[0].end(); iter++)
 		{
-			std::cout<<iter->outPutInfo()<<std::endl;
+			std::cout<<iter->toString()<<std::endl;
 		}
 		std::cout << std::endl;
 		std::cout << "node[0]'s reverse neighbor" << std::endl;
 		for (Node<int>::reverseIterator riter = node[0].rbegin(); riter != node[0].rend(); riter ++ )
 		{
-			std::cout << riter->outPutInfo() << std::endl;
+			std::cout << riter->toString() << std::endl;
 		}
 		std::cout << std::endl;
 		std::cout << "node[3]'s neighbors" << std::endl;
 		for (Node<int>::iterator iter = node[3].begin(); iter != node[3].end(); iter++)
 		{
-			std::cout << iter->outPutInfo() << std::endl;
+			std::cout << iter->toString() << std::endl;
 		}
 		std::cout << std::endl;
 		Node<int>::iterator iter01 = node[0].begin();
