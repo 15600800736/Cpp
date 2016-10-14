@@ -113,8 +113,16 @@ public:
 		std::cout << "built a new node assert order = 7" << std::endl;
 		Node<int> node7 = NodeFactor<int>::createNodeInStack();
 		std::cout << node7.order() << std::endl;
-		NodeFactor<int>::destruct(ptrNode6);
 		std::cout << std::endl;
+		std::cout << "built a new node assert order = 8" << std::endl;
+		Node<int> node8 = NodeFactor<int>::createNodeInStack();
+		std::cout << node8.order() << std::endl;
+		std::cout << std::endl;
+		std::cout << "built a new node assert order = 9" << std::endl;
+		Node<int>* node9 = NodeFactor<int>::createNodeInHeap();
+		std::cout << node9->order() << std::endl;
+		NodeFactor<int>::destruct(ptrNode6);
+		NodeFactor<int>::destruct(node9);
 	}
 private:
 	std::vector <Node<int> >  node;

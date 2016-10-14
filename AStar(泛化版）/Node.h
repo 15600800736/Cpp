@@ -15,11 +15,12 @@
  *	Node's data is used for restoring extra data.
  *
  */
+enum Memory{ STACK, HEAP };
 #ifndef NODE_H
 #define NODE_H
 
 #include <list>
-#include <queue>
+#include <stack>
 #include <algorithm>
 #include <stddef.h>
 #include <string>
@@ -279,17 +280,26 @@ public:
 	//	-destruct with function NodeFactor<T>::destruct
 	static Node<T>* createNodeInHeap(
 		typename Node<T>::valueType data = NULL,
-		Node<T>* parent = NULL)
+		Node<T>* parent = NULL,
+		Memory m = STACK)
 	{
 		if (_availiableOrder->empty())
 		{
-			return new Node<T>(_order++, data, parent);
+			_availiableOrder->push(0);
+		}
+		if (_availiableOrder->size() == 1)
+		{
+			Node<int>* node = new Node<int>(_availiableOrder->top());
+			int tmp = _availiableOrder->top();
+			_availiableOrder->pop();
+			_availiableOrder->push(++tmp);
+			return node;
 		}
 		else
 		{
-			int order = _availiableOrder->front();
+			Node<int>* node = new Node<int>(_availiableOrder->top());
 			_availiableOrder->pop();
-			return new Node<T>(order, data, parent);
+			return node;
 		}
 	}
 	////////////////////////////////////////////////////////////////////////////////////
@@ -300,14 +310,20 @@ public:
 	{
 		if (_availiableOrder->empty())
 		{
-			Node<T> node(_order++, data, parent);
+			_availiableOrder->push(0);
+		}
+		if (_availiableOrder->size() == 1)
+		{
+			Node<int> node(_availiableOrder->top());
+			int tmp = _availiableOrder->top();
+			_availiableOrder->pop();
+			_availiableOrder->push(++tmp);
 			return node;
 		}
 		else
 		{
-			int order = _availiableOrder->front();
+			Node<int> node(_availiableOrder->top());
 			_availiableOrder->pop();
-			Node<T> node(order, data, parent);
 			return node;
 		}
 	}
@@ -320,12 +336,9 @@ public:
 		node->~Node();
 	}
 private:
-	static int _order;
-	static std::queue<int>* _availiableOrder;
+	static std::stack<int>* _availiableOrder;
 };
 template<typename T>
-int NodeFactor<T>::_order = 0;
-template<typename T>
-std::queue<int>*  NodeFactor<T>::_availiableOrder  = new std::queue<int>();
+std::stack<int>* NodeFactor<T>::_availiableOrder = new std::stack<int>();
 }
 #endif
