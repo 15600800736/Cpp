@@ -52,7 +52,7 @@ namespace huger
 			std::cout << (node[0] > node[1]) << std::endl;
 			std::cout << std::endl;
 			std::cout << "node[0]'s neighbors" << std::endl;
-			for (Node<int>::iterator iter = node[0].begin(); iter != node[0].end(); iter++)
+			for (Node<int>::iterator iter = node[0].begin(); iter != node[0].end(); ++iter)
 			{
 				std::cout << iter->toString() << std::endl;
 			}

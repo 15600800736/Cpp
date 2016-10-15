@@ -17,35 +17,37 @@
 namespace huger
 {
 #include "global.h"
-template <typename Type,typename iteratorType/*,NodeOrConn nodeOrConn*/>
+template <typename nodeType,typename iteratorType/*,NodeOrConn nodeOrConn*/>
 class NodeIterator
 {
 public:
+	typedef typename nodeType::firstType firstType;
+	typedef typename nodeType::secondType secondType;
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-NodeIterator constructor
 	//	-Create a empty NodeIterator
-	NodeIterator() :_iterator(NULL)
+	NodeIterator() :_iterator(NULL), first(NULL), second(NULL)
 	{
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-NodeIterator constructor
 	//	-Create a NodeIterator with a list<T*>::iterator
-	NodeIterator(iteratorType iterator) :_iterator(iterator)
+	NodeIterator(iteratorType iterator) :_iterator(iterator), first(*iterator->first), second(iterator->second)
 	{
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator*
 	//	-return value of the address in list
-	Type operator*()
+	NodeIterator operator*()
 	{
-			return *(_iterator->first);
+		return *this;
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator->
 	//	-return the address in list
-	Type* operator->()
+	NodeIterator* operator->()
 	{
-			return _iterator->first;
+		return this;
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator==
@@ -101,12 +103,21 @@ public:
 		_iterator = other;
 		return *this;
 	}
+	/*how to deal when iterator meets the end*/
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator++
 	//	-return this iterator and make iterator point to next one
 	NodeIterator operator++()
 	{
 		++_iterator;
+		if (_iterator->first != NULL)
+		{
+			first = *(_iterator->first);
+		}
+		if (_iterator->second != NULL)
+		{
+			second = _iterator->second;
+		}
 		return *this;
 	}	
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +126,14 @@ public:
 	NodeIterator operator++(int)
 	{
 		NodeIterator result = _iterator++;
+		if (_iterator->first != NULL)
+		{
+			first = *(_iterator->first);
+		}
+		if (_iterator->second != NULL)
+		{
+			second = _iterator->second;
+		}
 		return result;
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -123,6 +142,14 @@ public:
 	NodeIterator operator--()
 	{
 		--_iterator;
+		if (_iterator->first != NULL)
+		{
+			first = *(_iterator->first);
+		}
+		if (_iterator->second != NULL)
+		{
+			second = _iterator->second;
+		}
 		return *this;
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -131,8 +158,18 @@ public:
 	NodeIterator operator--(int)
 	{
 		NodeIterator result = _iterator--;
+		if (_iterator->first != NULL)
+		{
+			first = *(_iterator->first);
+		}
+		if (_iterator->second != NULL)
+		{
+			second = _iterator->second;
+		}
 		return result;
 	}
+	firstType first;
+	secondType second;
 protected:
 	iteratorType _iterator;
 };

@@ -39,6 +39,7 @@ public:
 	typedef typename T* pointerType;
 	typedef typename T& referenceType;
 
+	typedef typename Node* iteratorDataType;
 	typedef typename std::set<Node*>::iterator localIterator;
 	typedef typename std::set<Node*>::reverse_iterator reverseLocalIterator;
 	typedef typename NodeIterator<Node, localIterator> iterator;

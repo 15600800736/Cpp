@@ -54,26 +54,26 @@ public:
 		std::cout << "node[0]'s neighbors" << std::endl;
 		for (Node<int,int>::iterator iter = node[0].begin(); iter != node[0].end(); iter++)
 		{
-			std::cout << iter->toString() << std::endl;
+			std::cout << iter->first.toString() << std::endl;
 		}
 		std::cout << std::endl;
 		std::cout << "node[0]'s reverse neighbor" << std::endl;
 		for (Node<int,int>::reverseIterator riter = node[0].rbegin(); riter != node[0].rend(); riter++)
 		{
-			std::cout << riter->toString() << std::endl;
+			std::cout << riter->first.toString() << std::endl;
 		}
 		std::cout << std::endl;
 		std::cout << "node[3]'s neighbors" << std::endl;
 		for (Node<int,int>::iterator iter = node[3].begin(); iter != node[3].end(); iter++)
 		{
-			std::cout << iter->toString() << std::endl;
+			std::cout << iter->first.toString() << std::endl;
 		}
 		std::cout << std::endl;
 		std::cout << "cut node[0] and node[1]" << std::endl;
 		cutWith(node[0], node[1]);
 		for (Node<int,int>::reverseIterator riter = node[0].rbegin(); riter != node[0].rend(); riter++)
 		{
-			std::cout << riter->toString() << std::endl;
+			std::cout << riter->first.toString() << std::endl;
 		}
 		Node<int,int>::iterator iter01 = node[0].begin();
 		Node<int,int>::iterator iter02 = node[0].begin();
@@ -86,25 +86,25 @@ public:
 		std::cout << std::endl;
 		Node<int,int>::iterator iter = node[0].begin();
 		std::cout << "iter's order:" << std::endl;
-		std::cout << iter->order() << std::endl;
+		std::cout << iter->first.order() << std::endl;
 		Node<int,int>::iterator prePlusIter = ++iter;
 		std::cout << "prePlusIter's order:" << std::endl;
-		std::cout << prePlusIter->order() << std::endl;
+		std::cout << prePlusIter->first.order() << std::endl;
 		iter = node[0].begin();
 		Node<int,int>::iterator posPlusIter = iter++;
 		std::cout << "posPlusIter's order:" << std::endl;
-		std::cout << posPlusIter->order() << std::endl;
+		std::cout << posPlusIter->first.order() << std::endl;
 		std::cout << std::endl;
 		iter = ++node[0].begin();
 		std::cout << "iter's order:" << std::endl;
-		std::cout << iter->order() << std::endl;
+		std::cout << iter->first.order() << std::endl;
 		Node<int,int>::iterator preMinusIter = --iter;
 		std::cout << "preMinusIter's order:" << std::endl;
-		std::cout << preMinusIter->order() << std::endl;
+		std::cout << preMinusIter->first.order() << std::endl;
 		iter = ++node[0].begin();
 		Node<int,int>::iterator posMinusIter = iter--;
 		std::cout << "posMinusIter's order:" << std::endl;
-		std::cout << posMinusIter->order() << std::endl;
+		std::cout << posMinusIter->first.order() << std::endl;
 		std::cout << std::endl;
 		std::cout << "node4,node5,node6's order:" << std::endl;
 		std::cout << ptrNode4->order() << std::endl << ptrNode5->order() << std::endl << ptrNode6->order() << std::endl;

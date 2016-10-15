@@ -39,12 +39,12 @@ public:
 	typedef typename T* pointerType;
 	typedef typename T& referenceType;
 
+	typedef typename Node firstType;
+	typedef typename Connection secondType;
 	typedef typename std::map<Node*,Connection>::iterator localIterator;
 	typedef typename std::map<Node*,Connection>::reverse_iterator reverseLocalIterator;
-	typedef typename NodeIterator<Node, localIterator/*,NODE*/> iterator;
-	typedef typename NodeIterator<Node, reverseLocalIterator/*,NODE*/> reverseIterator;
-	//typedef typename NodeIterator<Connection, localIterator, CONN> connIterator;
-	//typedef typename NodeIterator<Connection, reverseLocalIterator, CONN> connReverseIterator;
+	typedef typename NodeIterator<Node, localIterator> iterator;
+	typedef typename NodeIterator<Node, reverseLocalIterator> reverseIterator;
 	typedef typename NodeFactory<T,Connection> factory;
 	////////////////////////////////////////////////////////////////////////
 	//	-Node's copy constructor

@@ -4,6 +4,8 @@
 #ifndef COORD_H
 #define COORD_H
 
+namespace huger
+{
 struct Coord
 {
 	Coord() :X(0), Y(0)
@@ -40,4 +42,5 @@ struct Coord
 	int X;
 	int Y;
 };
+}
 #endif
