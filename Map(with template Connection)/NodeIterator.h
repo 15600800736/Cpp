@@ -38,38 +38,14 @@ public:
 	//	-return value of the address in list
 	Type operator*()
 	{
-		//switch (nodeOrConn)
-		//{
-		//case NODE:
-		//{
 			return *(_iterator->first);
-		//	break;
-		//}
-		//case CONN:
-		//{
-		//	return _iterator->first;
-		//	break;
-		//}
-		//}
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator->
 	//	-return the address in list
 	Type* operator->()
 	{
-		//switch (nodeOrConn)
-		//{
-		//case NODE:
-		//{
 			return _iterator->first;
-		//	break;
-		//}
-		//case CONN:
-		//{
-		//	return &_iterator->first;
-		//	break;
-		//}
-		//}
 	}
 	/////////////////////////////////////////////////////////////////////////////////////////
 	//	-overload operator==
