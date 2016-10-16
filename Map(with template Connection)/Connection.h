@@ -21,9 +21,12 @@ template<typename Object>
 class Connection :public Relation<Object,Object,int>
 {
 public:
-	typedef Relation::valueType distanceTypeType;
-	typedef Relation::firstType objectType;
+	typedef Relation::valueType valueType;
+	typedef	Object firstType;
+	typedef Object secondType;
 
+	typedef Relation::valueType distanceTypeType;
+	typedef Object objectType;
 	///////////////////////////////////////////////////////////////////////
 	//	-constructor
 	Connection()

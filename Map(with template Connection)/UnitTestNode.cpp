@@ -2,6 +2,7 @@
 
 //--------------UnitTestNode.cpp
 #include <iostream>
+#include "NodeFactory.h"
 #include "Node.h"
 #include <vector>
 namespace huger
@@ -12,7 +13,7 @@ class UnitTestNode
 public:
 	UnitTestNode()
 	{
-		nodeFactoryForTest = new NodeFactory<int,int>();
+		nodeFactoryForTest = new NodeFactory<Node<int,int> >();
 		for (int i = 0; i < 4; i++)
 		{
 			node.push_back(nodeFactoryForTest->createNodeInStack({ i, i }));
@@ -158,7 +159,7 @@ public:
 	}
 private:
 	std::vector <Node<int,int> >  node;
-	NodeFactory<int,int>* nodeFactoryForTest;
+	NodeFactory<Node<int,int> >* nodeFactoryForTest;
 };
 }
 

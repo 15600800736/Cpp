@@ -16,11 +16,11 @@ namespace huger
  *	Or they need different function name
  *
  */
-template<typename First,typename Second,typename DataType>
+template<typename First,typename Second,typename ValueType>
 class Relation
 {
 public:
-	typedef typename DataType valueType;
+	typedef typename ValueType valueType;
 	typedef typename First firstType;
 	typedef typename Second secondType;
 	//////////////////////////////////////////////////////////////////////////////

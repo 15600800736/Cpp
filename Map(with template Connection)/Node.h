@@ -19,7 +19,6 @@
 #define NODE_H
 
 #include <map>
-#include <stack>
 #include <vector>
 #include <algorithm>
 #include <stddef.h>
@@ -28,7 +27,7 @@
 #include "Coord.h"
 namespace huger
 {
-template<typename T,typename Connection>
+template<typename NodeType>
 class NodeFactory;
 template<typename T,typename Connection>
 class Node
@@ -44,7 +43,7 @@ public:
 	typedef typename std::map<Node*,Connection>::iterator iterator;
 	typedef typename std::map<Node*,Connection>::reverse_iterator reverseIterator;
 
-	typedef typename NodeFactory<T,Connection> factory;
+	typedef typename NodeFactory<Node<T,Connection> > factory;
 	////////////////////////////////////////////////////////////////////////
 	//	-Node's copy constructor
 	//	-assigned by the other node
@@ -258,7 +257,7 @@ public:
 		}
 		return neighbor;
 	}
-	friend class NodeFactory<T,Connection>;
+	friend class NodeFactory<Node<T,Connection> >;
 	//fields
 protected:
 	int _order;
@@ -292,84 +291,6 @@ private:
 	{
 	}
 };
-
-/*
-	*
-	*	Node factory to create nodes with insurance order
-	*	Make sure that different nodes has different order
-	*
-	*/
-template<typename T,typename Connection>
-class NodeFactory
-{
-public:
-	///////////////////////////////////////////////////////////////////////////////////
-	//	-constructor
-	//	@paramater startFrom - the minimum order of this factor's nodes
-	NodeFactory(int startFrom = 0)
-	{
-		_availiableOrder.push(startFrom);
-	}
-	virtual ~NodeFactory()
-	{
-	}
-	///////////////////////////////////////////////////////////////////////////////////
-	//	-Creat a node in heap
-	//	-destruct with function NodeFactor<T>::destruct
-	Node<T,Connection>* createNodeInHeap(
-		Coord coord,
-		typename Node<T,Connection>::valueType data = NULL,
-		Node<T,Connection>* parent = NULL)
-	{
-		if (_availiableOrder.size() == 1)
-		{
-			Node<T,Connection>* node = new Node<T,Connection>(_availiableOrder.top(), coord);
-			int tmp = _availiableOrder.top();
-			_availiableOrder.pop();
-			_availiableOrder.push(++tmp);
-			return node;
-		}
-		else
-		{
-			Node<T,Connection>* node = new Node<T,Connection>(_availiableOrder.top(), coord);
-			_availiableOrder.pop();
-			return node;
-		}
-	}
-	////////////////////////////////////////////////////////////////////////////////////
-	//	-Creat a node in stack
-	Node<T,Connection> createNodeInStack(
-		Coord coord,
-		typename Node<T,Connection>::valueType data = NULL,
-		Node<T,Connection>* parent = NULL)
-	{
-		if (_availiableOrder.size() == 1)
-		{
-			Node<T,Connection> node(_availiableOrder.top(), coord);
-			int tmp = _availiableOrder.top();
-			_availiableOrder.pop();
-			_availiableOrder.push(++tmp);
-			return node;
-		}
-		else
-		{
-			Node<T,Connection> node(_availiableOrder.top(), coord);
-			_availiableOrder.pop();
-			return node;
-		}
-	}
-	///////////////////////////////////////////////////////////////////////////////////
-	//	-Destruct a node in stack
-	//	-record the order
-	void destruct(Node<T,Connection>* node)
-	{
-		_availiableOrder.push(node->order());
-		node->~Node();
-	}
-private:
-	std::stack<int> _availiableOrder;
-};
-
 ///////////////////////////////////////////////////////////////////////////////////////
 //	`-connet two nodes with each other
 //	@parameter firstNode - the first node to connect
