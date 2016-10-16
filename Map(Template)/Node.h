@@ -20,6 +20,7 @@
 
 #include <set>
 #include <stack>
+#include <vector>
 #include <algorithm>
 #include <stddef.h>
 #include <string>
@@ -242,7 +243,21 @@ public:
 	{
 		_f = _g + 5 * _h;
 	}
-
+	/////////////////////////////////////////////////////////////////////////
+	//	-get all node connected with this node
+	//	-and restore them in vector
+	// -all Node should implement this interface
+	inline std::vector<Node> getNeighbor()
+	{
+		std::vector<Node> neighbor;
+		for (iterator iter = _neighbor.begin(); 
+			iter != _neighbor.end(); 
+			iter++)
+		{
+			neighbor.push_back(*iter);
+		}
+		return neighbor;
+	}
 	friend class NodeFactory < T > ;
 	//fields
 protected:

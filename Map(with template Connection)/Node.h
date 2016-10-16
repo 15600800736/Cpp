@@ -20,11 +20,11 @@
 
 #include <map>
 #include <stack>
+#include <vector>
 #include <algorithm>
 #include <stddef.h>
 #include <string>
 
-#include "NodeIterator.h"
 #include "Coord.h"
 namespace huger
 {
@@ -41,10 +41,9 @@ public:
 
 	typedef typename Node firstType;
 	typedef typename Connection secondType;
-	typedef typename std::map<Node*,Connection>::iterator localIterator;
-	typedef typename std::map<Node*,Connection>::reverse_iterator reverseLocalIterator;
-	typedef typename NodeIterator<Node, localIterator> iterator;
-	typedef typename NodeIterator<Node, reverseLocalIterator> reverseIterator;
+	typedef typename std::map<Node*,Connection>::iterator iterator;
+	typedef typename std::map<Node*,Connection>::reverse_iterator reverseIterator;
+
 	typedef typename NodeFactory<T,Connection> factory;
 	////////////////////////////////////////////////////////////////////////
 	//	-Node's copy constructor
@@ -105,25 +104,25 @@ public:
 
 	/////////////////////////////////////////////////////////////////////////
 	//	-return node's first element for iterator
-	inline localIterator begin()
+	inline iterator begin()
 	{
 		return _neighbor.begin();
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return node's end for iterator
-	inline localIterator end()
+	inline iterator end()
 	{
 		return _neighbor.end();
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return node's last element for reverse_iterator
-	inline reverseLocalIterator rbegin()
+	inline reverseIterator rbegin()
 	{
 		return _neighbor.rbegin();
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return node's end for reverse_iterator
-	inline reverseLocalIterator rend()
+	inline reverseIterator rend()
 	{
 		return _neighbor.rend();
 	}
@@ -244,7 +243,21 @@ public:
 	{
 		_f = _g + 5 * _h;
 	}
-
+	/////////////////////////////////////////////////////////////////////////
+	//	-get all node connected with this node
+	//	-and restore them in vector
+	// -all Node should implement this interface
+	inline std::vector<Node> getNeighbor()
+	{
+		std::vector<Node> neighbor;
+		for (iterator iter = _neighbor.begin();
+			iter != _neighbor.end();
+			iter++)
+		{
+			neighbor.push_back(*(iter->first));
+		}
+		return neighbor;
+	}
 	friend class NodeFactory<T,Connection>;
 	//fields
 protected:

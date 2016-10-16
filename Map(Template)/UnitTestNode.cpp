@@ -17,9 +17,9 @@ namespace huger
 			{
 				node.push_back(nodeFactoryForTest->createNodeInStack({ i, i }));
 			}
-			node[0].connectTo(node[1]);
-			node[0].connectTo(node[2]);
 			connectWith(node[0], node[3]);
+			node[0].connectTo(node[2]);
+			node[0].connectTo(node[1]);
 			connectWith(node[1], node[3]);
 
 		}
@@ -67,6 +67,16 @@ namespace huger
 			for (Node<int>::iterator iter = node[3].begin(); iter != node[3].end(); iter++)
 			{
 				std::cout << iter->toString() << std::endl;
+			}
+			std::cout << std::endl;
+			std::cout << "test getNeighbor" << std::endl;
+			std::cout << "node[0]'s neighbors" << std::endl;
+			std::vector<Node<int>> neighbor = node[0].getNeighbor();
+			for (std::vector<Node<int>>::iterator iter = neighbor.begin();
+				iter != neighbor.end();
+				iter++)
+			{
+				std::cout << iter->order() << std::endl;
 			}
 			std::cout << std::endl;
 			std::cout << "cut node[0] and node[1]" << std::endl;
@@ -141,11 +151,13 @@ namespace huger
 			nodeFactoryForTest->destruct(ptrNode6);
 			nodeFactoryForTest->destruct(node9);
 			std::cout << std::endl;
+
 		}
 		virtual ~UnitTestNode()
 		{
 			delete nodeFactoryForTest;
 		}
+
 	private:
 		std::vector <Node<int> >  node;
 		NodeFactory<int>* nodeFactoryForTest;
