@@ -33,8 +33,8 @@ public:
 	//	-destruct with function NodeFactor<T>::destruct
 	NodeType* createNodeInHeap(
 		Coord coord,
-		typename NodeType::valueType data = NULL,
-		NodeType* parent = NULL)
+		typename NodeType::valueType data = NULL
+		)
 	{
 		if (_availiableOrder.size() == 1)
 		{
@@ -55,8 +55,8 @@ public:
 	//	-Creat a node in stack
 	NodeType createNodeInStack(
 		Coord coord,
-		typename NodeType::valueType data = NULL,
-		NodeType* parent = NULL)
+		typename NodeType::valueType data = NULL
+		)
 	{
 		if (_availiableOrder.size() == 1)
 		{

@@ -124,16 +124,16 @@ public:
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-get parent
-	inline Node* getParent()const
+	inline Node getParent()const
 	{
-		return _parent;
+		return *_parent;
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-map parent
 	//	@parameter otherNode - the source
-	inline void setParent(Node* parent)
+	inline void setParent(Node parent)
 	{
-		_parent = parent;
+		_parent = new Node(parent);
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-get coord
@@ -207,10 +207,12 @@ public:
 	{
 		_neighbor.erase(&neighbor);
 	}
-	/////////////////////////////////////////////////////////////////////////
-	//	-compared another node by F value
-	//	-return 0 if equlas,1 if this node bigger than other and -1 for the contrary
-	//	@parameter otherNode - source to compare
+	///////////////////////////////////////////////////////////////////////////////////////
+	//	-Compare another node according value F
+	//	-if this < other ,return -1
+	//	-if this == other,return 0
+	//	-if this > other,return 1
+	//	@parameter otherNode -  the other node to compare
 	inline int compareByF(const Node& otherNode)
 	{
 		return _f < otherNode._f ? -1 : (_f == otherNode._f ? 0 : 1);
@@ -319,6 +321,20 @@ template<typename T,typename Connection>void cutWith(Node<T,Connection>& firstNo
 	{
 		firstNode.cutTo(secondNode);
 		secondNode.cutTo(firstNode);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////
+//	-Compare two nodes according value F
+//	-if first > second ,return -1
+//	-if first == second,return 0
+// -if first > second,return 1
+//	@parameter first - the first node to compare
+//	@parameter second -  the second node to compare
+template<typename T, typename Connection>int compareNode(Node<T, Connection> first, Node<T, Connection> second)
+{
+	if (&first != NULL)
+	{
+		return first.compareByF(second);
 	}
 }
 }
