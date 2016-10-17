@@ -38,8 +38,6 @@ public:
 	typedef typename T* pointerType;
 	typedef typename T& referenceType;
 
-	typedef typename Node firstType;
-	typedef typename Connection secondType;
 	typedef typename std::map<Node*,Connection>::iterator iterator;
 	typedef typename std::map<Node*,Connection>::reverse_iterator reverseIterator;
 
