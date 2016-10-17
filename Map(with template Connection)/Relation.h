@@ -16,45 +16,30 @@ namespace huger
  *	Or they need different function name
  *
  */
-template<typename First,typename Second,typename ValueType>
+template<typename ValueType>
 class Relation
 {
 public:
 	typedef typename ValueType valueType;
-	typedef typename First firstType;
-	typedef typename Second secondType;
 	//////////////////////////////////////////////////////////////////////////////
 	//	-constructor
-	Relation() :_firstObject(NULL), _secondObject(NULL), _value(NULL)
+	Relation() :_value(NULL)
 	{
 
 	}
-	Relation(object* firstOjbect, 
-		object* secondOjbect,
-		valueType value) :
-		_firstOjbect(firstOjbect), 
-		_secondObject(secondOjbect),
+	Relation(valueType value) :
 		_value(value)
 	{
 	}
 	Relation(const Relation& other)
 	{
-		_firstObject = other._firstObject;
-		_secondObject = other._secondObject;
 		_value = other._value;
 	}
 	virtual ~Relation()
 	{
 	}
-	//////////////////////////////////////////////////////////////////////////////
-	//	-overlaoding operator==
-	virtual bool operater == (const Relation& otherRelation) = 0;
-	//////////////////////////////////////////////////////////////////////////////
-	//	-overlaoding operator!=
-	virtual bool operater != (const Relation& otherRelation) = 0;
+	virtual valueType getValue()const = 0;
 protected:
-	firstType* _firstObject;
-	secondType* _secondObject;
 	valueType _value;
 };
 }

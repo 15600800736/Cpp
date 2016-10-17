@@ -17,28 +17,18 @@ namespace huger
  *	Of course,if source and destination equals,distance must be equal
  *
  */
-template<typename Object>
-class Connection :public Relation<Object,Object,int>
+class Connection :public Relation<int>
 {
 public:
 	typedef Relation::valueType valueType;
-	typedef	Object firstType;
-	typedef Object secondType;
-
-	typedef Relation::valueType distanceTypeType;
-	typedef Object objectType;
+	typedef Relation::valueType distanceType;
 	///////////////////////////////////////////////////////////////////////
 	//	-constructor
 	Connection()
 	{
 
 	}
-	Connection(objectType* sourceNode,
-		objectType* destinationNode,
-		distanceType distance) :
-		_firstObject(sourceNode),
-		_secondObject(destinationNode),
-		_value(distance)
+	Connection(distanceType distance) :Relation(distance)
 	{
 
 	}
@@ -49,9 +39,7 @@ public:
 	//	@parameter otherConnection - the source
 	bool operator==(const Connection& otherConnection)
 	{
-		return	_firstObject == otherConnection._firstObject && 
-			_secondObject == otherConnection._secondObject && 
-			_data == otherConnection._data;
+		return _value == otherConnection._value;
 	}	
 	///////////////////////////////////////////////////////////////////////
 	//	-overload operator!=
@@ -60,25 +48,11 @@ public:
 	//	@parameter otherConnection - the source
 	bool operator!=(const Connection& otherConnection)
 	{
-		return	_firstObject != otherConnection._firstObject ||
-			_secondObject != otherConnection._secondObject ||
-			_data != otherConnection._data;
+		return *this != otherConnection;
 	}
-	///////////////////////////////////////////////////////////////////////
-	//	-get the node connected to
-	objectType getDestination()const
-	{
-		return _secondObject;
-	}
-	///////////////////////////////////////////////////////////////////////
-	//	-get the node connected from
-	objectType getSource()const
-	{
-		return _firstObject;
-	}	
 	///////////////////////////////////////////////////////////////////////
 	//	-get two node's distance
-	distanceType getDistance()const
+	distanceType getValue()const
 	{
 		return _value;
 	}

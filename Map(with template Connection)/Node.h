@@ -33,7 +33,6 @@ template<typename T,typename Connection>
 class Node
 {
 public:
-	typedef int distanceType;
 	typedef typename T valueType;
 	typedef typename T* pointerType;
 	typedef typename T& referenceType;
@@ -196,8 +195,9 @@ public:
 	//	-which means this node can reach to otherNode,but contrary,can't
 	//	@parameter connection - the connection provided
 	//	@parameter otherNode - the node to connect to
-	inline void connectTo(Connection connection,Node& otherNode)
+	inline void connectTo(Node& otherNode)
 	{
+		Connection connection = createConnection(otherNode);
 		_neighbor.insert(std::make_pair(&otherNode,connection));
 	}
 	/////////////////////////////////////////////////////////////////////////
@@ -205,7 +205,6 @@ public:
 	//	@parameter neighbor - the neighbor to cut with
 	inline void cutTo(Node& neighbor)
 	{
-		//
 		_neighbor.erase(&neighbor);
 	}
 	/////////////////////////////////////////////////////////////////////////
@@ -255,9 +254,18 @@ public:
 		}
 		return neighbor;
 	}
+
 	friend class NodeFactory<Node<T,Connection> >;
 	//fields
 protected:
+	/////////////////////////////////////////////////////////////////////////
+	Connection createConnection(Node<T, Connection>& otherNode)
+	{
+		otherNode.caculateG(*this);
+		Connection connection(otherNode.getG());
+		return connection;
+	}
+
 	int _order;
 	std::map<Node*,Connection> _neighbor;
 	valueType _data;
@@ -297,8 +305,8 @@ template<typename T,typename Connection>void connectWith(Node<T,Connection>& fir
 {
 	if ((&firstNode) != NULL && (&secondNode) != NULL)
 	{
-		firstNode.connectTo(connection,secondNode);
-		secondNode.connectTo(connection,firstNode);
+		firstNode.connectTo(secondNode);
+		secondNode.connectTo(firstNode);
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////
