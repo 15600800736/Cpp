@@ -6,7 +6,7 @@
 #include "Coord.h"
 #include <stack>
 
-namespace huger
+namespace map
 {
 /*
 *

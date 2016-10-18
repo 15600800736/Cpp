@@ -7,10 +7,14 @@
 #include "DataStructure\Connection.h"
 #include <vector>
 #include "DataStructure\UnitTestNode.h"
-namespace huger
+#include "DataStructure\Functions.h"
+namespace map
 {
 template<typename T>void destructNodeFactor();
-
+template<typename Node>int compareNode(Node& first, Node& second);
+template<typename Node>void cutWith(Node& firstNode, Node& secondNode);
+template<typename Node>void connectWith(Node& firstNode, Node& secondNode, typename Node::connectionType connection);
+template<typename Node>bool isConnect(Node& first, Node& second);
 UnitTestNode::UnitTestNode()
 {
 	nodeFactoryForTest = new NodeFactory<Node<int,Connection>>();
@@ -171,6 +175,6 @@ UnitTestNode:: ~UnitTestNode()
 
 void main()
 {
-huger::UnitTestNode test;
+map::UnitTestNode test;
 test.methodTest();
 }

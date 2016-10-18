@@ -7,7 +7,7 @@
 #include "Connection.h"
 #include <vector>
 
-namespace huger
+namespace map
 {
 template<typename T>void destructNodeFactor();
 class UnitTestNode

@@ -25,7 +25,7 @@
 #include <string>
 
 #include "Coord.h"
-namespace huger
+namespace map
 {
 template<typename NodeType>
 class NodeFactory;
@@ -40,6 +40,7 @@ public:
 	typedef typename std::map<Node*,Connection>::iterator iterator;
 	typedef typename std::map<Node*,Connection>::reverse_iterator reverseIterator;
 
+	typedef typename Connection connectionType;
 	typedef typename NodeFactory<Node<T,Connection> > factory;
 	////////////////////////////////////////////////////////////////////////
 	//	-Node's copy constructor
@@ -256,7 +257,14 @@ public:
 		}
 		return neighbor;
 	}
-
+	/////////////////////////////////////////////////////////////////////////
+	//	-get if a node is the neighbor of this node
+	//	@parameter node - the neighbor
+	inline bool isNeighbor(Node& node)
+	{
+		iterator iterNode = _neighbor.find(node);
+		return iterNode != _neighbor.end();
+	}
 	friend class NodeFactory<Node<T,Connection> >;
 	//fields
 protected:
@@ -299,43 +307,8 @@ private:
 	{
 	}
 };
-///////////////////////////////////////////////////////////////////////////////////////
-//	`-connet two nodes with each other
-//	@parameter firstNode - the first node to connect
-//	@paramater secondNode - the second node to connect
-template<typename T,typename Connection>void connectWith(Node<T,Connection>& firstNode, Node<T,Connection>& secondNode,Connection connection)
-{
-	if ((&firstNode) != NULL && (&secondNode) != NULL)
-	{
-		firstNode.connectTo(secondNode);
-		secondNode.connectTo(firstNode);
-	}
-}
-///////////////////////////////////////////////////////////////////////////////////////
-//	`-seperate two nodes
-//	@parameter firstNode - the first node to cut
-//	@paramater secondNode - the second node to cut
-template<typename T,typename Connection>void cutWith(Node<T,Connection>& firstNode, Node<T,Connection>& secondNode)
-{
-	if ((&firstNode) != NULL && (&secondNode) != NULL)
-	{
-		firstNode.cutTo(secondNode);
-		secondNode.cutTo(firstNode);
-	}
-}
-///////////////////////////////////////////////////////////////////////////////////////
-//	-Compare two nodes according value F
-//	-if first > second ,return -1
-//	-if first == second,return 0
-// -if first > second,return 1
-//	@parameter first - the first node to compare
-//	@parameter second -  the second node to compare
-template<typename T, typename Connection>int compareNode(Node<T, Connection> first, Node<T, Connection> second)
-{
-	if (&first != NULL)
-	{
-		return first.compareByF(second);
-	}
-}
+
+
+
 }
 #endif

@@ -4,7 +4,7 @@
 #ifndef COORD_H
 #define COORD_H
 
-namespace huger
+namespace map
 {
 struct Coord
 {
