@@ -1,20 +1,9 @@
 
 
 //--------------UnitTestNode.cpp
-#include <iostream>
-#include "DataStructure\NodeFactory.h"
-#include "DataStructure\Node.h"
-#include "DataStructure\Connection.h"
-#include <vector>
 #include "DataStructure\UnitTestNode.h"
-#include "DataStructure\Functions.h"
 namespace map
 {
-template<typename T>void destructNodeFactor();
-template<typename Node>int compareNode(Node& first, Node& second);
-template<typename Node>void cutWith(Node& firstNode, Node& secondNode);
-template<typename Node>void connectWith(Node& firstNode, Node& secondNode, typename Node::connectionType connection);
-template<typename Node>bool isConnect(Node& first, Node& second);
 UnitTestNode::UnitTestNode()
 {
 	nodeFactoryForTest = new NodeFactory<Node<int,Connection>>();
@@ -25,7 +14,7 @@ UnitTestNode::UnitTestNode()
 	node[0].connectTo(node[1]);
 	node[0].connectTo(node[2]);
 	connectWith(node[0], node[3],Connection(3));
-	connectWith(node[1],node[3],Connection(4));
+	connectWith(node[1], node[3], Connection(4));
 
 }
 
@@ -164,6 +153,12 @@ void UnitTestNode::methodTest()
 	std::cout << "if make node[1] = node[2]" << std::endl;
 	std::cout << "node[0]'s parent : assert 1" << std::endl;
 	std::cout << node[0].getParent().order() << std::endl;
+	std::cout << std::endl;
+	std::cout << "test isConnect" << std::endl;
+	std::cout << "is node0 and node2Copy connected,assert 1" << std::endl;
+	Node<int, Connection> node2Copy = node[2];
+	std::cout << isConnect(node[0], node2Copy) << std::endl;
+	std::cout << isConnect(node2Copy, node[0]) << std::endl;
 }
 UnitTestNode:: ~UnitTestNode()
 {

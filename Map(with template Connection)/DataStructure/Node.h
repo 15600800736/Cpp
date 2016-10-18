@@ -260,9 +260,16 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//	-get if a node is the neighbor of this node
 	//	@parameter node - the neighbor
-	inline bool isNeighbor(Node& node)
+	inline bool isNeighbor(Node node)
 	{
-		iterator iterNode = _neighbor.find(node);
+		iterator iterNode = std::find_if(
+			_neighbor.begin(), 
+			_neighbor.end(),
+			[&](std::pair<Node*,Connection> pair)
+			{
+				return pair.first->order() == node.order();
+			}
+		);
 		return iterNode != _neighbor.end();
 	}
 	friend class NodeFactory<Node<T,Connection> >;

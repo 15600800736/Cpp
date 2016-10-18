@@ -5,11 +5,11 @@
 #include "NodeFactory.h"
 #include "Node.h"
 #include "Connection.h"
+#include "Functions.h"
 #include <vector>
 
 namespace map
 {
-template<typename T>void destructNodeFactor();
 class UnitTestNode
 {
 public:
