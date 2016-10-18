@@ -23,13 +23,13 @@
 #include <algorithm>
 #include <stddef.h>
 #include <string>
-
+#include "Connection.h"
 #include "Coord.h"
 namespace map
 {
 template<typename NodeType>
 class NodeFactory;
-template<typename T,typename Connection>
+template<typename T,typename Connection = Connection>
 class Node
 {
 public:
@@ -198,15 +198,22 @@ public:
 	//	@parameter otherNode - the node to connect to
 	inline void connectTo(Node& otherNode)
 	{
-		Connection connection = createConnection(otherNode);
-		_neighbor.insert(std::make_pair(&otherNode,connection));
+		if (isNeighbor(otherNode) == _neighbor.end())
+		{
+			Connection connection = createConnection(otherNode);
+			_neighbor.insert(std::make_pair(&otherNode, connection));
+		}
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-cut the connection with an neighbor unilateral
 	//	@parameter neighbor - the neighbor to cut with
 	inline void cutTo(Node& neighbor)
 	{
-		_neighbor.erase(&neighbor);
+		iterator iter = isNeighbor(neighbor);
+		if (iter != _neighbor.end())
+		{
+			_neighbor.erase(iter);
+		}
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
 	//	-Compare another node according value F
@@ -260,7 +267,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//	-get if a node is the neighbor of this node
 	//	@parameter node - the neighbor
-	inline bool isNeighbor(Node node)
+	inline iterator isNeighbor(Node node)
 	{
 		iterator iterNode = std::find_if(
 			_neighbor.begin(), 
@@ -270,7 +277,7 @@ public:
 				return pair.first->order() == node.order();
 			}
 		);
-		return iterNode != _neighbor.end();
+		return iterNode;
 	}
 	friend class NodeFactory<Node<T,Connection> >;
 	//fields

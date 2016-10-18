@@ -27,11 +27,18 @@ public:
 			_node.insert(*first);
 		}
 	}
-
+	template<typename iter>Map(iter first, int n)
+	{
+		for (int i = 0; i < n; iter++, i++)
+		{
+			_node.insert(*iter);
+		}
+	}
 	void addNode(Node& node)
 	{
 		_node.insert(node);
 	}
+	void removeNode(Node&)
 protected:
 	std::set<Node> _node;
 };

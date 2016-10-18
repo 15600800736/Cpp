@@ -54,7 +54,7 @@ template<typename nodeType, typename connectionType>void connectWith(nodeType& f
 //	@paramater secondNode - the second node to connect
 template<typename Node>bool isConnect(Node first, Node second)
 {
-	return  first.isNeighbor(second) || second.isNeighbor(first);
+	return  first.isNeighbor(second) != first.end() || second.isNeighbor(first) != second.end();
 }
 }
 
