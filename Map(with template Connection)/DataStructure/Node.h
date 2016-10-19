@@ -51,6 +51,7 @@ public:
 	Node(const Node& otherNode)
 	{
 		_order = otherNode._order;
+		_inDegree = otherNode._inDegree;
 		_coord = otherNode._coord;
 		_data = otherNode._data;
 		_neighbor.clear();
@@ -167,6 +168,18 @@ public:
 		return _h;
 	}
 	/////////////////////////////////////////////////////////////////////////
+	//	-get how many nodes is connected from this node
+	inline int getOutDegree()const
+	{
+		return _neighbor.size();
+	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-get how many nodes connect to this node
+	inline int getInDegree()const
+	{
+		return _inDegree;
+	}
+	/////////////////////////////////////////////////////////////////////////
 	//	-transfer all of the member's value to string to output
 	std::string toString()
 	{
@@ -187,17 +200,19 @@ public:
 		{
 			Connection connection = createConnection(otherNode);
 			_neighbor.insert(std::make_pair(&otherNode, connection));
+			otherNode._inDegree++;
 		}
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-cut the connection with an neighbor unilateral
 	//	@parameter neighbor - the neighbor to cut with
-	inline void cutTo(const Node& neighbor)
+	inline void cutTo(Node& neighbor)
 	{
 		iterator iter = isNeighbor(neighbor);
 		if (iter != _neighbor.end())
 		{
 			_neighbor.erase(iter);
+			neighbor._inDegree--;
 		}
 	}
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -282,6 +297,7 @@ protected:
 	}
 
 	int _order;
+	int _inDegree;
 	std::map < Node*, Connection,NodeCopmareByOrder<Node*> > _neighbor;
 	valueType _data;
 	int _g;
@@ -303,6 +319,7 @@ private:
 		valueType data = NULL,
 		Node* parent = NULL) :
 		_order(order),
+		_inDegree(0),
 		_coord(coord),
 		_data(data),
 		_g(0),

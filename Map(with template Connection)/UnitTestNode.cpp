@@ -25,6 +25,11 @@ void UnitTestNode::methodTest()
 	Node<int>* ptrNode6 = nodeFactoryForTest->createNodeInHeap({ 6, 6 });
 	std::cout << "Test Node" << std::endl;
 	//copy constructor test
+	std::cout << "test out and in degree" << std::endl;
+	std::cout << "node0's outdegree assert 3,indegree assert 1" << std::endl;
+	std::cout << node[0].getOutDegree() << std::endl;
+	std::cout << node[0].getInDegree() << std::endl;
+	std::cout << std::endl;
 	Node<int> node0Copy(node[0]);
 	Node<int> node1Copy = node[1];
 	std::cout << "node0Copy's information" << std::endl;
