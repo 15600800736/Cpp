@@ -9,11 +9,14 @@
 namespace graphic
 {
 /*
-*
-*	Node factory to create nodes with insurance order
-*	Make sure that different nodes has different order
-*
-*/
+ *
+ *	Node factory to create nodes with insurance order
+ *	Make sure that different nodes has different order
+ *	When you delete a node,the node's order will be restore in a stack
+ *	the order of node you will get is the reverse order of node you deleted till stack is empty
+ *	i.e:create 0,1,2,3,4,5,delete 2,3 and now,if you create,you will get 3,2,6,7,8...
+ *
+ */
 template<typename NodeType>
 class NodeFactory
 {

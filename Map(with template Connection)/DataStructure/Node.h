@@ -4,17 +4,19 @@
 //Node.h
 
 /*
-*
-*	A class that abstracts data structure-Node.
-*	Node is implemented by std::map at bottom.
-*	Node has three members G,H,F to represent the cost of moving from one to another.
-*	Node's iterator is an repackaging map's iterator which redefine operator* and -> 
-*	to make the map<Node*,Connection>::iterator act as set<Node>::iterator
-*	Node is only identificated by member-_order,
-*	which means that a node equals another one only when they have same order.
-*	Node's data is used for restoring extra data.
-*
-*/
+ *
+ *	A class that abstracts data structure-Node.
+ *	Node is implemented by std::map at bottom with the pointer of node as key, node's connection as value
+ *	and sort by node's order
+ *	Node has three members G,H,F to represent the cost of moving from one to another.
+ *	Node is only identificated by member-_order with overloding operator==
+ *	which means that a node equals another one only when they have same order
+ *	you can connect or cut to another node with any equal-order-node
+ *	for order controlling,the constructor of node has been declared in private fields and customs can't create a node directly
+ *	but a factory is provided to create a node ( see factory doc in details)
+ *	Node's data is used for restoring extra data.
+ *
+ */
 #ifndef NODE_H
 #define NODE_H
 
