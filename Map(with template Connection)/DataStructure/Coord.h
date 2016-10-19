@@ -4,7 +4,7 @@
 #ifndef COORD_H
 #define COORD_H
 
-namespace map
+namespace graphic
 {
 struct Coord
 {
@@ -21,26 +21,32 @@ struct Coord
 	{
 		return (this->X == otherCoord.X) && (this->Y == otherCoord.Y) ? true : false;
 	}
-	Coord operator-(Coord& otherCoord)
+	Coord operator-(const Coord& otherCoord)
 	{
 		Coord coord(X - otherCoord.X, Y - otherCoord.Y);
 		return coord;
 	}
-	Coord operator+(Coord& otherCoord)
+	Coord operator+(const Coord& otherCoord)
 	{
 		Coord coord(X + otherCoord.X, Y + otherCoord.Y);
 		return coord;
 	}
-	int dot(Coord& otherCoord)
+	int dot(const Coord& otherCoord)
 	{
 		return X*otherCoord.X + Y*otherCoord.Y;
 	}
-	int cross(Coord& otherCoord)
+	int cross(const Coord& otherCoord)
 	{
 		return X*otherCoord.Y - Y*otherCoord.X;
 	}
 	int X;
 	int Y;
 };
+
+Coord operator-(const Coord& first, const Coord& second)
+{
+	Coord coord(first.X - second.X, first.Y - second.Y);
+	return coord;
+}
 }
 #endif

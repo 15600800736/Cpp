@@ -8,7 +8,7 @@
 #include "Functions.h"
 #include <vector>
 
-namespace map
+namespace graphic
 {
 class UnitTestNode
 {

@@ -4,7 +4,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-namespace map
+namespace graphic
 {
 ///////////////////////////////////////////////////////////////////////////////////////
 //	-Compare two nodes according value F
@@ -14,7 +14,7 @@ namespace map
 //	@parameter first - the first node to compare
 //	@parameter second -  the second node to compare
 
-template<typename Node>int compareNode(Node& first, Node& second)
+template<typename Node>int compareNode(const Node& first,const Node& second)
 {
 	if (&first != NULL)
 	{
@@ -26,7 +26,7 @@ template<typename Node>int compareNode(Node& first, Node& second)
 //	`-seperate two nodes
 //	@parameter firstNode - the first node to cut
 //	@paramater secondNode - the second node to cut
-template<typename Node>void cutWith(Node& firstNode, Node& secondNode)
+template<typename Node>void cutWith(Node& firstNode,Node& secondNode)
 {
 	if ((&firstNode) != NULL && (&secondNode) != NULL)
 	{
@@ -39,7 +39,7 @@ template<typename Node>void cutWith(Node& firstNode, Node& secondNode)
 //	`-connet two nodes with each other
 //	@parameter firstNode - the first node to connect
 //	@paramater secondNode - the second node to connect
-template<typename nodeType, typename connectionType>void connectWith(nodeType& firstNode, nodeType& secondNode, connectionType connection)
+template<typename nodeType>void connectWith(nodeType& firstNode, nodeType& secondNode)
 {
 	if ((&firstNode) != NULL && (&secondNode) != NULL)
 	{

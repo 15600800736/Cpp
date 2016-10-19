@@ -1,44 +1,44 @@
 
 
-//Map.h
+//graphic.h
 
 #ifndef MAP_H
 #define MAP_H
 
 #include <set>
-namespace map
+namespace graphic
 {
 template<typename Node>
-class Map
+class 
 {
 public:
-	Map()
+	graphic()
 	{
 		//do nothing
 	}
-	Map(const Map& other)
+	graphic(const graphic& other)
 	{
 		_node = other._node;
 	}
-	template<typename iter>Map(iter first, iter second)
+	template<typename iter>graphic(iter first, iter second)
 	{
 		for (; first != second; first++)
 		{
 			_node.insert(*first);
 		}
 	}
-	template<typename iter>Map(iter first, int n)
+	template<typename iter>graphic(iter first, int n)
 	{
 		for (int i = 0; i < n; iter++, i++)
 		{
 			_node.insert(*iter);
 		}
 	}
-	void addNode(Node& node)
+	void addNode(const Node& node)
 	{
 		_node.insert(node);
 	}
-	void removeNode(Node&)
+	void removeNode(const Node&)
 protected:
 	std::set<Node> _node;
 };

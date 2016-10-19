@@ -5,7 +5,7 @@
 #define CONNECTION_H
 #include "Relation.h"
 
-namespace map
+namespace graphic
 {
 
 /*

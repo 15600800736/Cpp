@@ -6,7 +6,7 @@
 #include "Coord.h"
 #include <stack>
 
-namespace map
+namespace graphic
 {
 /*
 *

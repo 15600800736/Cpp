@@ -2,7 +2,7 @@
 
 //--------------UnitTestNode.cpp
 #include "DataStructure\UnitTestNode.h"
-namespace map
+namespace graphic
 {
 UnitTestNode::UnitTestNode()
 {
@@ -13,8 +13,8 @@ UnitTestNode::UnitTestNode()
 	}
 	node[0].connectTo(node[1]);
 	node[0].connectTo(node[2]);
-	connectWith(node[0], node[3],Connection(3));
-	connectWith(node[1], node[3], Connection(4));
+	connectWith(node[0], node[3]);
+	connectWith(node[1], node[3]);
 
 }
 
@@ -39,12 +39,6 @@ void UnitTestNode::methodTest()
 	std::cout << std::endl;
 	std::cout << "node[0] != node[1]" << std::endl;
 	std::cout << (node[0] != node[1]) << std::endl;
-	std::cout << std::endl;
-	std::cout << "node[0] <node[1]" << std::endl;
-	std::cout << (node[0] < node[1]) << std::endl;
-	std::cout << std::endl;
-	std::cout << "node[0] > node[1]" << std::endl;
-	std::cout << (node[0] > node[1]) << std::endl;
 	std::cout << std::endl;
 	std::cout << "node[0]'s neighbors" << std::endl;
 	for (Node<int>::iterator iter = node[0].begin(); iter != node[0].end(); iter++)
@@ -185,6 +179,40 @@ void UnitTestNode::methodTest()
 	Node<int, Connection> node2Copy = node[2];
 	std::cout << isConnect(node[0], node2Copy) << std::endl;
 	std::cout << isConnect(node2Copy, node[0]) << std::endl;
+
+
+
+	std::cout << std::endl;
+	std::cout << std::endl;
+	std::cout << std::endl;
+	std::cout << "test sort by order" << std::endl;
+	Node<int, Connection> testOrder = nodeFactoryForTest->createNodeInStack({ 0, 0 });
+	std::cout << "insert in order node0 node1 node2" << std::endl;
+	for (int i = 0; i < 3; i++)
+	{
+		testOrder.connectTo(node[i]);
+	}
+	std::vector<Node<int, Connection> > orderNeighbor = testOrder.getNeighbor();
+	for (std::vector<Node<int, Connection>>::iterator iter = orderNeighbor.begin();
+		iter != orderNeighbor.end();
+		iter++)
+	{
+		std::cout << iter->order() << std::endl;
+	}
+	std::cout << std::endl;
+	std::cout << "insert in order node2 node1 node0" << std::endl;
+	testOrder.clear();
+	for (int i =2 ; i > -1; i--)
+	{
+		testOrder.connectTo(node[i]);
+	}
+	orderNeighbor = testOrder.getNeighbor();
+	for (std::vector<Node<int, Connection>>::iterator iter = orderNeighbor.begin();
+		iter != orderNeighbor.end();
+		iter++)
+	{
+		std::cout << iter->order() << std::endl;
+	}
 }
 UnitTestNode:: ~UnitTestNode()
 {
@@ -196,6 +224,6 @@ UnitTestNode:: ~UnitTestNode()
 
 void main()
 {
-map::UnitTestNode test;
+graphic::UnitTestNode test;
 test.methodTest();
 }

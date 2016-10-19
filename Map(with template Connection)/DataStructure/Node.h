@@ -25,10 +25,12 @@
 #include <string>
 #include "Connection.h"
 #include "Coord.h"
-namespace map
+namespace graphic
 {
 template<typename NodeType>
 class NodeFactory;
+template<typename nodeType>
+class NodeCopmareByOrder;
 template<typename T,typename Connection = Connection>
 class Node
 {
@@ -80,22 +82,6 @@ public:
 	inline bool operator!=(const Node& otherNode)
 	{
 		return !(*this == otherNode);
-	}
-	////////////////////////////////////////////////////////////////////////
-	//	-overlaoding operator<
-	//	-when an node's order is less than the other node's order
-	//	@parameter otherNode - the source
-	inline bool operator<(const Node& otherNode)
-	{
-		return _order < otherNode._order ? true : false;
-	}
-	////////////////////////////////////////////////////////////////////////
-	//	-overlaoding operator>
-	//	-when an node's order is bigger than the other node's order
-	//	@parameter otherNode - the source
-	inline bool operator>(const Node& otherNode)
-	{
-		return !(*this < otherNode || *this == otherNode);
 	}
 	//I/O interface
 
@@ -194,7 +180,6 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//	-build the connection unilateral
 	//	-which means this node can reach to otherNode,but contrary,can't
-	//	@parameter connection - the connection provided
 	//	@parameter otherNode - the node to connect to
 	inline void connectTo(Node& otherNode)
 	{
@@ -207,7 +192,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//	-cut the connection with an neighbor unilateral
 	//	@parameter neighbor - the neighbor to cut with
-	inline void cutTo(Node& neighbor)
+	inline void cutTo(const Node& neighbor)
 	{
 		iterator iter = isNeighbor(neighbor);
 		if (iter != _neighbor.end())
@@ -228,7 +213,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//	-caculate the g value
 	//	@parameter parent - the node which you start from
-	inline void caculateG(Node& start)
+	inline void caculateG(const Node& start)
 	{
 		_g = abs(start._coord.X - _coord.X) + abs(start._coord.Y - _coord.Y);
 	}
@@ -236,7 +221,7 @@ public:
 	//	-caculate the h value
 	//	@parameter start - the node which you come from
 	//	@parameter parent - the node which you are going to
-	inline void caculateH(Node& start, Node& destination)
+	inline void caculateH(const Node& start,const Node& destination)
 	{
 		Coord vecStartToCurrent(_coord - start._coord);
 		Coord vecStartToDestination(destination._coord - start._coord);
@@ -252,7 +237,7 @@ public:
 	/////////////////////////////////////////////////////////////////////////
 	//	-get all node connected with this node
 	//	-and restore them in vector
-	// -all Node should implement this interface
+	//	-all Node should implement this interface
 	inline std::vector<Node> getNeighbor()
 	{
 		std::vector<Node> neighbor;
@@ -279,6 +264,12 @@ public:
 		);
 		return iterNode;
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-clear all connection to other node
+	inline void clear()
+	{
+		_neighbor.clear();
+	}
 	friend class NodeFactory<Node<T,Connection> >;
 	//fields
 protected:
@@ -291,7 +282,7 @@ protected:
 	}
 
 	int _order;
-	std::map<Node*,Connection> _neighbor;
+	std::map < Node*, Connection,NodeCopmareByOrder<Node*> > _neighbor;
 	valueType _data;
 	int _g;
 	int _h;
@@ -321,8 +312,15 @@ private:
 	{
 	}
 };
-
-
+template<typename nodeType>
+class NodeCopmareByOrder
+{
+public:
+	bool operator()(const nodeType& first, const nodeType& second)
+	{
+		return first->order() < second->order();
+	}
+};
 
 }
 #endif

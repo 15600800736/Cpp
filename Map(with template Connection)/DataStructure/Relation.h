@@ -6,7 +6,7 @@
 #define RELATION_H
 
 #include "global.h"
-namespace map
+namespace graphic
 {
 /*
  *
