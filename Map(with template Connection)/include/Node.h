@@ -27,7 +27,7 @@
 #include <string>
 #include "Connection.h"
 #include "Coord.h"
-#include "ConnectionFactory.h"
+#include "RelationFactory.h"
 namespace graphic
 {
 template<typename NodeType>
@@ -42,8 +42,8 @@ public:
 	typedef typename T* pointerType;
 	typedef typename T& referenceType;
 
-	typedef typename std::map<Node*,Connection>::iterator iterator;
-	typedef typename std::map<Node*,Connection>::reverse_iterator reverseIterator;
+	typedef typename std::map<Node*,Connection*>::iterator iterator;
+	typedef typename std::map<Node*,Connection*>::reverse_iterator reverseIterator;
 
 	typedef typename Connection connectionType;
 	typedef typename NodeFactory<Node<T,Connection> > factory;
@@ -201,7 +201,7 @@ public:
 	{
 		if (isNeighbor(otherNode) == _neighbor.end())
 		{
-			Connection connection = createConnection(otherNode);
+			Connection* connection = createConnection(abs(otherNode._order - _order));
 			_neighbor.insert(std::make_pair(&otherNode, connection));
 			otherNode._inDegree++;
 		}
@@ -214,6 +214,7 @@ public:
 		iterator iter = isNeighbor(neighbor);
 		if (iter != _neighbor.end())
 		{
+			RelationFactory::destroyRelation(iter->second);
 			_neighbor.erase(iter);
 			neighbor._inDegree--;
 		}
@@ -275,7 +276,7 @@ public:
 		iterator iterNode = std::find_if(
 			_neighbor.begin(), 
 			_neighbor.end(),
-			[&](std::pair<Node*,Connection> pair)
+			[&](std::pair<Node*,Connection*> pair)
 			{
 				return pair.first->order() == node.order();
 			}
@@ -291,16 +292,25 @@ public:
 	friend class NodeFactory<Node<T,Connection> >;
 	//fields
 protected:
+
+	Connection* createConnection(int cost)
+	{
+		Relation* relation = RelationFactory::createRelation(RelationFactory::simpleConnection);
+		Connection* connection = dynamic_cast<Connection*>(relation);
+		connection->setCost(cost);
+		return connection;
+	}
+
 	int _order;
 	int _inDegree;
-	std::map < Node*, Connection,NodeCopmareByOrder<Node*> > _neighbor;
+	std::map < Node*, Connection*,NodeCopmareByOrder<Node*> > _neighbor;
 	valueType _value;
 	int _g;
 	int _h;
 	int _f;
 	Node* _parent;
 	Coord _coord;
-	ConnectionFactory _connectionFactory;
+	
 private:
 	///////////////////////////////////////////////////////////////////////
 	//	-Node's contructor

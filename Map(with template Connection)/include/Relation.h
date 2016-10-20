@@ -29,7 +29,7 @@ public:
 	{
 	}
 protected:
-	virtual bool operator==(const Relation&)= 0;
+	virtual void extendFromRelation() = 0;
 };
 }
 #endif

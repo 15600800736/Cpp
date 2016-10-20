@@ -11,7 +11,7 @@ namespace graphic
 /*
  *
  *	The child class of Relation specially for two node's connection
- *	The member value means two node's distance
+ *	The member cost means two node's distance
  *	more specific details should be defined in node's class
  *	The connection equals one another only when they have the same source destination and distance
  *	Of course,if source and destination equals,distance must be equal
@@ -20,16 +20,7 @@ namespace graphic
 class Connection :public Relation
 {
 public:
-	///////////////////////////////////////////////////////////////////////
-	//	-constructor
-	Connection()
-	{
 
-	}
-	Connection(int distance) :_value(distance)
-	{
-
-	}
 	///////////////////////////////////////////////////////////////////////
 	//	-overload operator==
 	//	 The connection equals one another only when they have the same source destination and distance
@@ -37,7 +28,7 @@ public:
 	//	@parameter otherConnection - the source
 	bool operator==(const Connection& otherConnection)
 	{
-		return _value == otherConnection._value;
+		return _cost == otherConnection._cost;
 	}	
 	///////////////////////////////////////////////////////////////////////
 	//	-overload operator!=
@@ -50,19 +41,35 @@ public:
 	}
 	///////////////////////////////////////////////////////////////////////
 	//	-get two node's distance
-	int getValue()const
+	int getCost()const
 	{
-		return _value;
+		return _cost;
 	}
 	///////////////////////////////////////////////////////////////////////
 	//	-set two node's distance
-	//	@parameter value - source
-	void setDistance(int value)
+	//	@parameter cost - source
+	void setCost(int cost)
 	{
-		_value = value;
+		_cost = cost;
+	}
+	void init(int cost)
+	{
+		_cost = cost;
+	}
+	friend class RelationFactory;
+protected:
+	void extendFromRelation()
+	{
+
 	}
 private:
-	int _value;
+	///////////////////////////////////////////////////////////////////////
+	//	-constructor
+	Connection()
+	{
+
+	}
+	int _cost;
 };
 }
 #endif
