@@ -17,18 +17,16 @@ namespace graphic
  *	Of course,if source and destination equals,distance must be equal
  *
  */
-class Connection :public Relation<int>
+class Connection :public Relation
 {
 public:
-	typedef Relation::valueType valueType;
-	typedef Relation::valueType distanceType;
 	///////////////////////////////////////////////////////////////////////
 	//	-constructor
 	Connection()
 	{
 
 	}
-	Connection(distanceType distance) :Relation(distance)
+	Connection(int distance) :_value(distance)
 	{
 
 	}
@@ -52,17 +50,19 @@ public:
 	}
 	///////////////////////////////////////////////////////////////////////
 	//	-get two node's distance
-	distanceType getValue()const
+	int getValue()const
 	{
 		return _value;
 	}
 	///////////////////////////////////////////////////////////////////////
 	//	-set two node's distance
 	//	@parameter value - source
-	void setDistance(distanceType value)
+	void setDistance(int value)
 	{
 		_value = value;
 	}
+private:
+	int _value;
 };
 }
 #endif

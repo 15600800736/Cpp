@@ -16,31 +16,20 @@ namespace graphic
  *	Or they need different function name
  *
  */
-template<typename ValueType>
 class Relation
 {
 public:
-	typedef typename ValueType valueType;
 	//////////////////////////////////////////////////////////////////////////////
 	//	-constructor
-	Relation() :_value(NULL)
+	Relation() 
 	{
 
-	}
-	Relation(valueType value) :
-		_value(value)
-	{
-	}
-	Relation(const Relation& other)
-	{
-		_value = other._value;
 	}
 	virtual ~Relation()
 	{
 	}
-	virtual valueType getValue()const = 0;
 protected:
-	valueType _value;
+	virtual bool operator==(const Relation&)= 0;
 };
 }
 #endif

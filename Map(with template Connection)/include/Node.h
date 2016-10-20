@@ -5,7 +5,7 @@
 
 /*
  *
- *	A class that abstracts data structure-Node.
+ *	A class that abstracts value structure-Node.
  *	Node is implemented by std::map at bottom with the pointer of node as key, node's connection as value
  *	and sort by node's order
  *	Node has three members G,H,F to represent the cost of moving from one to another.
@@ -14,7 +14,7 @@
  *	you can connect or cut to another node with any equal-order-node
  *	for order controlling,the constructor of node has been declared in private fields and customs can't create a node directly
  *	but a factory is provided to create a node ( see factory doc in details)
- *	Node's data is used for restoring extra data.
+ *	Node's value is used for restoring extra value.
  *
  */
 #ifndef NODE_H
@@ -27,6 +27,7 @@
 #include <string>
 #include "Connection.h"
 #include "Coord.h"
+#include "ConnectionFactory.h"
 namespace graphic
 {
 template<typename NodeType>
@@ -55,7 +56,7 @@ public:
 		_order = otherNode._order;
 		_inDegree = otherNode._inDegree;
 		_coord = otherNode._coord;
-		_data = otherNode._data;
+		_value = otherNode._value;
 		_neighbor.clear();
 		_neighbor = otherNode._neighbor;
 		_f = otherNode._f;
@@ -145,11 +146,11 @@ public:
 		return _order;
 	}
 	/////////////////////////////////////////////////////////////////////////
-	//	-return reference for data
+	//	-return reference for value
 	//	-convenience for reading and writing
-	inline valueType& data()
+	inline valueType& value()
 	{
-		return _data;
+		return _value;
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-return f
@@ -186,7 +187,7 @@ public:
 	std::string toString()
 	{
 		char cResult[128];
-		sprintf_s(cResult, "order = %d, data = %d, f = %d, g = %d, h = %d.", _order, _data, _f, _g, _h);
+		sprintf_s(cResult, "order = %d, value = %d, f = %d, g = %d, h = %d.", _order, _value, _f, _g, _h);
 		std::string result = cResult;
 		return result;
 	}
@@ -290,40 +291,33 @@ public:
 	friend class NodeFactory<Node<T,Connection> >;
 	//fields
 protected:
-	/////////////////////////////////////////////////////////////////////////
-	Connection createConnection(Node<T, Connection>& otherNode)
-	{
-		otherNode.caculateG(*this);
-		Connection connection(otherNode.getG());
-		return connection;
-	}
-
 	int _order;
 	int _inDegree;
 	std::map < Node*, Connection,NodeCopmareByOrder<Node*> > _neighbor;
-	valueType _data;
+	valueType _value;
 	int _g;
 	int _h;
 	int _f;
 	Node* _parent;
 	Coord _coord;
+	ConnectionFactory _connectionFactory;
 private:
 	///////////////////////////////////////////////////////////////////////
 	//	-Node's contructor
 	//	-create an node with empty neighbor
 	//	@parameter order - the only identifaction of node
 	//	@parameter coord - the abstract of position
-	//	@parameter data - extra data of the node
+	//	@parameter value - extra value of the node
 	//	@parameter g,h - cost of moving
 	//	@parameter parent - the node when it takes backward
 	Node(int order,
 		Coord coord,
-		valueType data = NULL,
+		valueType value = NULL,
 		Node* parent = NULL) :
 		_order(order),
 		_inDegree(0),
 		_coord(coord),
-		_data(data),
+		_value(value),
 		_g(0),
 		_h(0),
 		_f(0),
