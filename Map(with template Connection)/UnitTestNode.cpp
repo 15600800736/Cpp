@@ -218,6 +218,9 @@ void UnitTestNode::methodTest()
 	{
 		std::cout << iter->order() << std::endl;
 	}
+	std::cout << std::endl;
+	std::cout << "Test getConnection" << std::endl;
+	std::cout << node[0].getConnection(node[3])->getCost() << std::endl;
 }
 UnitTestNode:: ~UnitTestNode()
 {

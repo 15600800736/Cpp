@@ -12,22 +12,23 @@ template<typename Node>
 class 
 {
 public:
-	graphic()
+	typedef typename std::set<Node>::iterator iterator;
+	Graphic()
 	{
 		//do nothing
 	}
-	graphic(const graphic& other)
+	Graphic(const Graphic& other)
 	{
 		_node = other._node;
 	}
-	template<typename iter>graphic(iter first, iter second)
+	template<typename iter>Graphic(iter first, iter second)
 	{
 		for (; first != second; first++)
 		{
 			_node.insert(*first);
 		}
 	}
-	template<typename iter>graphic(iter first, int n)
+	template<typename iter>Graphic(iter first, int n)
 	{
 		for (int i = 0; i < n; iter++, i++)
 		{
@@ -39,6 +40,13 @@ public:
 		_node.insert(node);
 	}
 	void removeNode(const Node&)
+	{
+
+	}
+	iterator isInMap(Node& node)
+	{
+
+	}
 protected:
 	std::set<Node> _node;
 };

@@ -74,6 +74,8 @@ public:
 	////////////////////////////////////////////////////////////////////////
 	//	-overlaoding operator==
 	//	-when an node's order equals the other node's order
+	//	-as the convention,if a node's order equals another
+	//	-you can connect or cut connection with any one of them
 	//	@parameter otherNode - the source
 	inline bool operator==(const Node& otherNode)
 	{
@@ -234,7 +236,7 @@ public:
 	//	@parameter parent - the node which you start from
 	inline void caculateG(const Node& start)
 	{
-		_g = abs(start._coord.X - _coord.X) + abs(start._coord.Y - _coord.Y);
+		_g = abs(start._order - _order) * (abs(start._coord.X - _coord.X) + abs(start._coord.Y - _coord.Y));
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-caculate the h value
@@ -270,8 +272,12 @@ public:
 	}
 	/////////////////////////////////////////////////////////////////////////
 	//	-get if a node is the neighbor of this node
+	//	-if node is the neighbor of this node
+	//	-it will return the position in this node's neighbor
+	//	-if node isn't the neighbor of this node
+	//	-it will return the end
 	//	@parameter node - the neighbor
-	inline iterator isNeighbor(Node node)
+	inline iterator isNeighbor(Node& node)
 	{
 		iterator iterNode = std::find_if(
 			_neighbor.begin(), 
@@ -289,10 +295,24 @@ public:
 	{
 		_neighbor.clear();
 	}
+	/////////////////////////////////////////////////////////////////////////
+	//	-get the connection of this node to a neighbor
+	//	-if the neighbor isn't a really neighbor
+	//	-it will return NULL
+	//	@parameter neighbor - the neighbor
+	inline Connection* getConnection(Node& neighbor)
+	{
+		Connection* connection = NULL;
+		iterator iter = isNeighbor(neighbor);
+		if (iter != _neighbor.end())
+		{
+			connection = iter->second;
+		}
+		return connection;
+	}
 	friend class NodeFactory<Node<T,Connection> >;
 	//fields
 protected:
-
 	Connection* createConnection(int cost)
 	{
 		Relation* relation = RelationFactory::createRelation(RelationFactory::simpleConnection);
