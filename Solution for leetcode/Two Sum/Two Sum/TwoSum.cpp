@@ -42,3 +42,9 @@ public:
 	}
 
 };
+int main() {
+	Solution solution;
+	std::vector<int> nums = { 2, 7, 11, 5 };
+	solution.twoSum(nums, 9);
+	return 0;
+}
