@@ -1,9 +1,15 @@
+
+
+/*
+ * Considering all input cases including space and illegal input
+ */
 #include <vector>
 #include <algorithm>
 #include <math.h>
+#include <string>
 class Solution {
 public:
-	int myAtoi(string str) {
+	int myAtoi(std::string str) {
 		int res = 0;
 		int start = 0;
 		int sign = 0;

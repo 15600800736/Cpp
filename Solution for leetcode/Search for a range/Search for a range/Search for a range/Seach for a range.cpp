@@ -1,3 +1,7 @@
+/*
+ * binary search
+ */
+
 #include <vector>
 using namespace std;
 class Solution {
