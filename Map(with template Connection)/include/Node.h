@@ -25,16 +25,15 @@
 #include <algorithm>
 #include <stddef.h>
 #include <string>
-#include "Connection.h"
+#include "SimpleRelation.h"
 #include "Coord.h"
-#include "RelationFactory.h"
 namespace graphic
 {
 template<typename NodeType>
 class NodeFactory;
 template<typename nodeType>
 class NodeCopmareByOrder;
-template<typename T,typename Connection = Connection>
+template<typename T,typename Connection = SimpleRelation>
 class Node
 {
 public:
@@ -47,6 +46,10 @@ public:
 
 	typedef typename Connection connectionType;
 	typedef typename NodeFactory<Node<T,Connection> > factory;
+	////////////////////////////////////////////////////////////////////////
+	//	-create an empty node with nothing in it
+	Node()
+	{ }
 	////////////////////////////////////////////////////////////////////////
 	//	-Node's copy constructor
 	//	-assigned by the other node
@@ -185,6 +188,13 @@ public:
 		return _inDegree;
 	}
 	/////////////////////////////////////////////////////////////////////////
+	//	-set how many nodes connect to this node
+	//	-it only should be called by it's child class,but how to do it?
+	void setInDegree(int inDegree)
+	{
+		_inDegree = inDegree;
+	}
+	/////////////////////////////////////////////////////////////////////////
 	//	-transfer all of the member's value to string to output
 	std::string toString()
 	{
@@ -199,7 +209,7 @@ public:
 	//	-build the connection unilateral
 	//	-which means this node can reach to otherNode,but contrary,can't
 	//	@parameter otherNode - the node to connect to
-	inline void connectTo(Node& otherNode)
+	virtual inline void connectTo(Node& otherNode)
 	{
 		if (isNeighbor(otherNode) == _neighbor.end())
 		{
@@ -216,7 +226,7 @@ public:
 		iterator iter = isNeighbor(neighbor);
 		if (iter != _neighbor.end())
 		{
-			RelationFactory::destroyRelation(iter->second);
+			delete iter->second;
 			_neighbor.erase(iter);
 			neighbor._inDegree--;
 		}
@@ -315,9 +325,8 @@ public:
 protected:
 	Connection* createConnection(int cost)
 	{
-		Relation* relation = RelationFactory::createRelation(RelationFactory::simpleConnection);
-		Connection* connection = dynamic_cast<Connection*>(relation);
-		connection->setCost(cost);
+		Connection* connection = new Connection();
+		connection->setDistance(cost);
 		return connection;
 	}
 

@@ -26,6 +26,11 @@ struct Coord
 		Coord coord(X - otherCoord.X, Y - otherCoord.Y);
 		return coord;
 	}
+	Coord operator-(const Coord& otherCoord)const
+	{
+		Coord coord(X - otherCoord.X, Y - otherCoord.Y);
+		return coord;
+	}
 	Coord operator+(const Coord& otherCoord)
 	{
 		Coord coord(X + otherCoord.X, Y + otherCoord.Y);
@@ -42,11 +47,5 @@ struct Coord
 	int X;
 	int Y;
 };
-
-Coord operator-(const Coord& first, const Coord& second)
-{
-	Coord coord(first.X - second.X, first.Y - second.Y);
-	return coord;
-}
 }
 #endif

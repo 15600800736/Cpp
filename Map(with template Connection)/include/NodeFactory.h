@@ -2,7 +2,7 @@
 
 #ifndef NODE_FACTORY_H
 #define NODE_FACTORY_H
-#include "global.h"
+#include "constance.h"
 #include "Coord.h"
 #include <stack>
 

@@ -4,7 +4,7 @@
 #include <iostream>
 #include "NodeFactory.h"
 #include "Node.h"
-#include "Connection.h"
+#include "SimpleRelation.h"
 #include "Functions.h"
 #include <vector>
 
@@ -17,7 +17,7 @@ public:
 	void methodTest();
 	virtual ~UnitTestNode();
 private:
-	std::vector <Node<int, Connection> >  node;
-	NodeFactory<Node<int, Connection> >* nodeFactoryForTest;
+	std::vector <Node<int> >  node;
+	NodeFactory<Node<int> >* nodeFactoryForTest;
 };
 }
